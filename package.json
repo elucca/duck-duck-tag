@@ -1,0 +1,33 @@
+{
+  "name": "ImageTagger",
+  "version": "1.0.0",
+  "description": "A minimal image tagger",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "mocha",
+    "lint": "eslint .",
+    "package": "electron-packager . electron-tutorial-app --overwrite --asar=true --platform=linux --arch=x64 --prune=true --out=release-builds"
+  },
+  "repository": "https://github.com/duck-duck-tag/duck-duck-tag/",
+  "keywords": [
+    "Electron",
+    "quick",
+    "start",
+    "tutorial",
+    "demo"
+  ],
+  "author": "GitHub",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "axios": "^0.19.2",
+    "electron": "^8.2.5",
+    "electron-packager": "^14.2.1",
+    "eslint": "^7.0.0",
+    "mocha": "^7.1.2",
+    "spectron": "^10.0.1"
+  },
+  "dependencies": {
+    "dotenv": "^8.2.0"
+  }
+}
