@@ -10,7 +10,7 @@ Otettu täältä pohja:
 Käyttöönotto:
 
 ```bash
-git clone https://github.com/toppyy/electron-testi
+git clone https://github.com/duck-duck-tag/duck-duck-tag
 cd electron-testi
 npm install
 npm start
