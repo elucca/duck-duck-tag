@@ -1,0 +1,40 @@
+.button {
+    background-color: #555555;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    
+  }
+
+img {
+  margin: 5%;
+  height: 75%;
+  width: 75%;
+}
+
+input {
+  width: 50%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 2px solid #555555;
+  border-radius: 4px;
+}
+
+.imageContainer {
+  float: left;
+  width: 45%;
+}
+
+.tagListContainer {
+  float: left;
+  width: 45%;
+}
+
+h5 {
+  margin: 5px;
+}
