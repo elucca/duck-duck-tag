@@ -6,6 +6,7 @@ import routes from '../constants/routes.json';
 
 import getUrlAsBase64 from '../utils/getUrlAsBase64'
 import tagImageAzure from '../utils/tagImageAzure'
+import tagImageIBM from '../utils/tagImageIbm'
 
 
 declare namespace types {
@@ -13,9 +14,7 @@ declare namespace types {
         label: string,
         accuracy: number
     }
-    
 }
-
 
 
 
@@ -29,11 +28,11 @@ const Image = () => {
 
   
     
-    const handleClick = () => {
+    const handleClickAzure = () => {
         
         // Display image
         getUrlAsBase64(imageURL).then((pic: String) => {
-            setImgSource('data:image/png;base64,' + pic)            
+            setImgSource('data:image/png;base64,' + pic)
         })
         // Create and run query to Azure
         const azureQuery = tagImageAzure(CREDENTIALS,imageURL)
@@ -41,7 +40,21 @@ const Image = () => {
         azureQuery.then((tags: Array<types.tag>) => {
             setTaglist(tags)
         })
+    }
+
+
+    const handleClickIBM = () => {
         
+        // Display image
+        getUrlAsBase64(imageURL).then((pic: String) => {
+            setImgSource('data:image/png;base64,' + pic)
+        })
+        // Create and run query to IBM
+        const ibmQuery = tagImageIBM(CREDENTIALS,imageURL)
+
+        ibmQuery.then((tags: Array<types.tag>) => {
+            setTaglist(tags.sort((tag1, tag2) => (tag1.accuracy > tag2.accuracy) ? -1 : 1)) // from high accuracy to low
+        })
     }
 
     const handleURLchange = (e: Event) => {
@@ -77,7 +90,8 @@ const Image = () => {
             <h5>API-endpoint:</h5>
             <input placeholder='API-endpoint' onChange={handleApiEndpointChange} type='text' ></input>
             <br></br>
-            <button className={styles.button} onClick={handleClick}>Analyze image</button>
+            <button className={styles.button} id="azure" onClick={handleClickAzure}>Analyze image with Azure</button>
+            <button className={styles.button} id="ibm" onClick={handleClickIBM}>Analyze image with IBM</button>
             <br></br>
             <div className={styles.imageContainer}>
             {
