@@ -7,6 +7,7 @@ import routes from '../constants/routes.json';
 import getUrlAsBase64 from '../utils/getUrlAsBase64'
 import tagImageAzure from '../utils/tagImageAzure'
 import tagImageIBM from '../utils/tagImageIbm'
+import exportTags from '../utils/exportTags'
 
 
 declare namespace types {
@@ -22,20 +23,20 @@ const Image = () => {
 
     const [imgSource, setImgSource] = useState('')
     const [taglist, setTaglist] = useState([])
-    const [CREDENTIALS, setCREDENTIALS] = useState({ API_KEY: '' , API_ENDPOINT: '' })
-    
+    const [CREDENTIALS, setCREDENTIALS] = useState({ API_KEY: '', API_ENDPOINT: '' })
+
     const [imageURL, setImageURL] = useState('https://i.picsum.photos/id/256/200/200.jpg')
 
-  
-    
+
+
     const handleClickAzure = () => {
-        
+
         // Display image
         getUrlAsBase64(imageURL).then((pic: String) => {
             setImgSource('data:image/png;base64,' + pic)
         })
         // Create and run query to Azure
-        const azureQuery = tagImageAzure(CREDENTIALS,imageURL)
+        const azureQuery = tagImageAzure(CREDENTIALS, imageURL)
 
         azureQuery.then((tags: Array<types.tag>) => {
             setTaglist(tags)
@@ -44,17 +45,21 @@ const Image = () => {
 
 
     const handleClickIBM = () => {
-        
+
         // Display image
         getUrlAsBase64(imageURL).then((pic: String) => {
             setImgSource('data:image/png;base64,' + pic)
         })
         // Create and run query to IBM
-        const ibmQuery = tagImageIBM(CREDENTIALS,imageURL)
+        const ibmQuery = tagImageIBM(CREDENTIALS, imageURL)
 
         ibmQuery.then((tags: Array<types.tag>) => {
             setTaglist(tags.sort((tag1, tag2) => (tag1.accuracy > tag2.accuracy) ? -1 : 1)) // from high accuracy to low
         })
+    }
+
+    const handleClickExport = () => {
+        exportTags(imageURL, taglist)
     }
 
     const handleURLchange = (e: Event) => {
@@ -63,22 +68,22 @@ const Image = () => {
 
     const handleApiEndpointChange = (e: Event) => {
         let updatedCredentials = CREDENTIALS
-        updatedCredentials.API_ENDPOINT = e.target.value 
+        updatedCredentials.API_ENDPOINT = e.target.value
         setCREDENTIALS(updatedCredentials)
     }
     const handleApiKeyChange = (e: Event) => {
         let updatedCredentials = CREDENTIALS
-        updatedCredentials.API_KEY = e.target.value 
+        updatedCredentials.API_KEY = e.target.value
         setCREDENTIALS(updatedCredentials)
     }
 
- 
 
-    return(
+    // This could stand to be refactored into separate components
+    return (
         <div>
-            <div  data-tid="backButton">
+            <div data-tid="backButton">
                 <Link to={routes.HOME}>
-                <i className="fa fa-arrow-left fa-3x" />
+                    <i className="fa fa-arrow-left fa-3x" />
                 </Link>
             </div>
             <h5>URL for image to tag:</h5>
@@ -93,16 +98,18 @@ const Image = () => {
             <button className={styles.button} id="azure" onClick={handleClickAzure}>Analyze image with Azure</button>
             <button className={styles.button} id="ibm" onClick={handleClickIBM}>Analyze image with IBM</button>
             <br></br>
+            <button className={styles.button} id="export" onClick={handleClickExport}>Export tags</button>
+            <br></br>
             <div className={styles.imageContainer}>
-            {
-                imgSource ?   <img src={imgSource}></img> : ''
-            }
+                {
+                    imgSource ? <img src={imgSource}></img> : ''
+                }
             </div>
             <div className={styles.tagListContainer}>
                 <ul>
-                        {
+                    {
                         taglist.map((tag: types.tag) => {
-                            return(<li key={tag.label}>{ tag.label } (accuracy {Math.floor(tag.accuracy*10000)/100 } %)</li>)
+                            return (<li key={tag.label}>{tag.label} (accuracy {Math.floor(tag.accuracy * 10000) / 100} %)</li>)
 
                         })
                     }
