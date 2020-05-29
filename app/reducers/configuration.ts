@@ -1,7 +1,7 @@
 import { Action } from 'redux';
- 
+import services from '../constants/services.json';
 
-const configuration = (state = {} ,action) => {
+const configuration = (state = services ,action) => {
 
 
   switch (action.type) {
