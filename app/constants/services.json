@@ -1,0 +1,6 @@
+{
+    "services": [
+        { "name": "Azure", "API_URL_QUERY": "/vision/v2.1/analyze?visualFeatures=Tags&language=en", "API_URL_BASE": "" },
+        { "name": "IBM-watson", "API_URL_QUERY": "/v3/classify?version=2018-03-19&url=", "API_URL_BASE": "https://api.eu-de.visual-recognition.watson.cloud.ibm.com/instances/" }
+    ]
+}

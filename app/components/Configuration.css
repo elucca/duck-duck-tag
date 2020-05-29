@@ -9,6 +9,18 @@
     font-size: 16px;
     
   }
+.chosenButton {
+  background-color: green;
+    border: 1px;
+    margin: 2px;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
 
 img {
   margin: 5%;
@@ -25,20 +37,3 @@ input {
   border-radius: 4px;
 }
 
-.imageContainer {
-  float: left;
-  width: 45%;
-}
-
-.tagListContainer {
-  float: left;
-  width: 45%;
-}
-
-h5 {
-  margin: 5px;
-}
-
-button {
-  margin: 5px
-}

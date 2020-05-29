@@ -13,25 +13,26 @@ declare namespace types {
         }
     }
 
-    interface credentials {
-        API_KEY: String,
-        API_ENDPOINT: String
+    interface configuration {
+        API_KEY: string,
+        API_ENDPOINT: string,
+        API_URL_QUERY: string,
+        API_URL_BASE: string
     }
 }
 
-const tagImageIBM = ( credentials: types.credentials, image_URL: String ) => {
+const tagImageIBM = ( configuration: types.configuration, image_URL: String ) => {
 
-    const BASE_URL = "https://api.eu-de.visual-recognition.watson.cloud.ibm.com/instances/"
+    // Should not happen..
+    const checkIfUndefined = (str) => str ? str : ''
 
-    const API_URL = '/v3/classify?version=2018-03-19&url='
-
-    const URL = BASE_URL + credentials.API_ENDPOINT + API_URL + image_URL
+    const URL = checkIfUndefined(configuration.API_URL_BASE)  + checkIfUndefined(configuration.API_ENDPOINT) + checkIfUndefined(configuration.API_URL_QUERY) + image_URL
 
 
     const manipulateTag = (tag: types.tag) => ({ 'label': tag.class.toLowerCase(), 'accuracy': tag.score })
     
 
-    const apikey = btoa(`apikey:${credentials.API_KEY}`)
+    const apikey = btoa(`apikey:${configuration.API_KEY}`)
 
     const auth_header = axios.defaults.headers.common['Authorization'] = 'Basic ' + apikey;
 

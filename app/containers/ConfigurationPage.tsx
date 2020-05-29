@@ -1,13 +1,11 @@
 import { connect } from 'react-redux';
 import Configuration from '../components/Configuration';
 import addConfiguration from '../actions/configure';
-import { counterStateType } from '../reducers/types';
 
 
-
-function mapStateToProps(state: counterStateType) {
+function mapStateToProps(state) {
     return {
-      counter: state.counter
+      configuration: state.configuration
     };
   }
   

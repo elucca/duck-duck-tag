@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import services from '../constants/services.json';
+
 import styles from './Image.css';
 
 import routes from '../constants/routes.json';
@@ -18,7 +21,7 @@ declare namespace types {
 
 
 
-const Image = () => {
+const Image = (props) => {
 
     const [imgSource, setImgSource] = useState('')
     const [taglist, setTaglist] = useState([])
@@ -26,7 +29,9 @@ const Image = () => {
     
     const [imageURL, setImageURL] = useState('https://i.picsum.photos/id/256/200/200.jpg')
 
-  
+    const AzureConfig   = props.configuration['Azure']
+    const IbmConfig     = props.configuration['IBM-watson']
+
     
     const handleClickAzure = () => {
         
@@ -35,7 +40,7 @@ const Image = () => {
             setImgSource('data:image/png;base64,' + pic)
         })
         // Create and run query to Azure
-        const azureQuery = tagImageAzure(CREDENTIALS,imageURL)
+        const azureQuery = tagImageAzure( AzureConfig ,imageURL)
 
         azureQuery.then((tags: Array<types.tag>) => {
             setTaglist(tags)
@@ -50,7 +55,7 @@ const Image = () => {
             setImgSource('data:image/png;base64,' + pic)
         })
         // Create and run query to IBM
-        const ibmQuery = tagImageIBM(CREDENTIALS,imageURL)
+        const ibmQuery = tagImageIBM(IbmConfig,imageURL)
 
         ibmQuery.then((tags: Array<types.tag>) => {
             setTaglist(tags.sort((tag1, tag2) => (tag1.accuracy > tag2.accuracy) ? -1 : 1)) // from high accuracy to low
@@ -61,18 +66,7 @@ const Image = () => {
         setImageURL(e.target.value)
     }
 
-    const handleApiEndpointChange = (e: Event) => {
-        let updatedCredentials = CREDENTIALS
-        updatedCredentials.API_ENDPOINT = e.target.value 
-        setCREDENTIALS(updatedCredentials)
-    }
-    const handleApiKeyChange = (e: Event) => {
-        let updatedCredentials = CREDENTIALS
-        updatedCredentials.API_KEY = e.target.value 
-        setCREDENTIALS(updatedCredentials)
-    }
 
- 
 
     return(
         <div>
@@ -84,11 +78,6 @@ const Image = () => {
             <h5>URL for image to tag:</h5>
             <input value={imageURL} onChange={handleURLchange} type='text' ></input>
             <br></br>
-            <h5>API-key:</h5>
-            <input placeholder='API-key' onChange={handleApiKeyChange} type='password' ></input>
-            <br></br>
-            <h5>API-endpoint:</h5>
-            <input placeholder='API-endpoint' onChange={handleApiEndpointChange} type='text' ></input>
             <br></br>
             <button className={styles.button} id="azure" onClick={handleClickAzure}>Analyze image with Azure</button>
             <button className={styles.button} id="ibm" onClick={handleClickIBM}>Analyze image with IBM</button>

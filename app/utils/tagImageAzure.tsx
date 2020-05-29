@@ -13,24 +13,26 @@ declare namespace types {
         }
     }
 
-    interface credentials {
-        API_KEY: String,
-        API_ENDPOINT: String 
+    interface configuration {
+        API_KEY: string,
+        API_ENDPOINT: string,
+        API_URL_QUERY: string,
+        API_URL_BASE: string
     }
 
 }
 
 
-const tagImageAzure = ( credentials: types.credentials, image_URL: String) => {
+const tagImageAzure = ( configuration: types.configuration, image_URL: string) => {
 
 
     const headers = {
-        'Ocp-Apim-Subscription-Key': credentials.API_KEY,
+        'Ocp-Apim-Subscription-Key': configuration.API_KEY,
         'Content-Type': 'application/json'
     }
 
 
-    const API_URL = credentials.API_ENDPOINT + "/vision/v2.1/analyze?visualFeatures=Tags&language=en";
+    const API_URL = configuration.API_ENDPOINT.concat(configuration.API_URL_QUERY);
 
 
     const manipulateTag = (tag: types.tag) => ({ 'label': tag.name.toLowerCase(), 'accuracy': tag.confidence })
