@@ -3,3 +3,4 @@ node_modules
 release
 app/dist/*
 app/main.prod.js
+.eslintcache

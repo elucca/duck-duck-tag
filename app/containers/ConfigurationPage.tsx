@@ -1,12 +1,19 @@
-import React from 'react';
+import { connect } from 'react-redux';
 import Configuration from '../components/Configuration';
+import addConfiguration from '../actions/configure';
+import { counterStateType } from '../reducers/types';
 
 
-const ConfigurationPage = () => {
-    return(
-        <Configuration/>
-    )
+
+function mapStateToProps(state: counterStateType) {
+    return {
+      counter: state.counter
+    };
+  }
+  
+const mapDispatchToProps = {
+    addConfiguration
 }
-
-
-export default ConfigurationPage
+  
+export default connect(mapStateToProps, mapDispatchToProps)(Configuration)
+  
