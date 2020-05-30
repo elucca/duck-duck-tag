@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Image.css';
-
+import { CSVLink, CSVDownload } from 'react-csv'
 import routes from '../constants/routes.json';
 
 import getUrlAsBase64 from '../utils/getUrlAsBase64'
@@ -17,7 +17,6 @@ declare namespace types {
 }
 
 
-
 const Image = () => {
 
     const [imgSource, setImgSource] = useState('')
@@ -26,6 +25,7 @@ const Image = () => {
     
     const [imageURL, setImageURL] = useState('https://i.picsum.photos/id/256/200/200.jpg')
 
+    const [animation, setAnimation] = useState('')
   
     
     const handleClickAzure = () => {
@@ -34,13 +34,25 @@ const Image = () => {
         getUrlAsBase64(imageURL).then((pic: String) => {
             setImgSource('data:image/png;base64,' + pic)
         })
+        
         // Create and run query to Azure
         const azureQuery = tagImageAzure(CREDENTIALS,imageURL)
-
-        azureQuery.then((tags: Array<types.tag>) => {
-            setTaglist(tags)
-        })
+        setTaglist([])
+        setAnimation('processing')
+        
+        azureQuery
+            .then((tags: Array<types.tag>) => {
+                setAnimation('')
+                setTaglist(tags)
+            })
+            .catch(error => {
+                setAnimation(error.toString())
+            })
     }
+
+    // The above error can be caused for example when the user calls the wrong tagging service.
+    // In the future it would be better to ensure that it is only possible to call the correct
+    // service with the corresponding credentials.
 
 
     const handleClickIBM = () => {
@@ -51,11 +63,15 @@ const Image = () => {
         })
         // Create and run query to IBM
         const ibmQuery = tagImageIBM(CREDENTIALS,imageURL)
+        setTaglist([])
+        setAnimation('processing')
 
         ibmQuery.then((tags: Array<types.tag>) => {
+            setAnimation('')
             setTaglist(tags.sort((tag1, tag2) => (tag1.accuracy > tag2.accuracy) ? -1 : 1)) // from high accuracy to low
         })
     }
+
 
     const handleURLchange = (e: Event) => {
         setImageURL(e.target.value)
@@ -92,11 +108,15 @@ const Image = () => {
             <br></br>
             <button className={styles.button} id="azure" onClick={handleClickAzure}>Analyze image with Azure</button>
             <button className={styles.button} id="ibm" onClick={handleClickIBM}>Analyze image with IBM</button>
+            <button className={styles.button} id="export" onClick={handleClickExport}>Export tags</button>
             <br></br>
             <div className={styles.imageContainer}>
             {
                 imgSource ?   <img src={imgSource}></img> : ''
             }
+            </div>
+            <div>
+                <p>{animation}</p>
             </div>
             <div className={styles.tagListContainer}>
                 <ul>
@@ -110,8 +130,6 @@ const Image = () => {
             </div>
         </div>
     )
-
-
 }
 
 
