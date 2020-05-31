@@ -14,7 +14,7 @@ The application is being built on the specification and requirement provided by 
 *  [License](#license)
 
 ## Implementation
-This project will be a TypeScript application utilizing [Electron](https://www.electronjs.org/) and [ReactJS](https://reactjs.org/)
+This project will be a [TypeScript](https://www.typescriptlang.org/) application utilizing [Electron](https://www.electronjs.org/) and [ReactJS](https://reactjs.org/)
 
 ## Running the app locally
 
