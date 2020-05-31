@@ -8,14 +8,7 @@ import getUrlAsBase64 from '../utils/getUrlAsBase64'
 import tagImageAzure from '../utils/tagImageAzure'
 import tagImageIBM from '../utils/tagImageIbm'
 import exportTags from '../utils/exportTags'
-
-
-declare namespace types {
-    interface tag {
-        label: string,
-        accuracy: number
-    }
-}
+import imageTypes from './ImageTypes.ts'
 
 
 const Image = () => {
@@ -31,7 +24,7 @@ const Image = () => {
     const handleClickAzure = () => {
 
         // Display image
-        getUrlAsBase64(imageURL).then((pic: String) => {
+        getUrlAsBase64(imageURL).then((pic: string) => {
             setImgSource('data:image/png;base64,' + pic)
         })
         
@@ -41,12 +34,12 @@ const Image = () => {
         setAnimation('processing')
         
         azureQuery
-            .then((tags: Array<types.tag>) => {
+            .then((Tags: Array<imageTypes.tag>) => {
                 setAnimation('')
-                setTaglist(tags)
+                setTaglist(Tags)
             })
-            .catch(error => {
-                setAnimation(error.toString())
+            .catch(Error => {
+                setAnimation(Error.toString())
             })
     }
 
@@ -58,7 +51,7 @@ const Image = () => {
     const handleClickIBM = () => {
 
         // Display image
-        getUrlAsBase64(imageURL).then((pic: String) => {
+        getUrlAsBase64(imageURL).then((pic: string) => {
             setImgSource('data:image/png;base64,' + pic)
         })
         // Create and run query to IBM
@@ -66,7 +59,7 @@ const Image = () => {
         setTaglist([])
         setAnimation('processing')
 
-        ibmQuery.then((tags: Array<types.tag>) => {
+        ibmQuery.then((tags: Array<imageTypes.tag>) => {
             setAnimation('')
             setTaglist(tags.sort((tag1, tag2) => (tag1.accuracy > tag2.accuracy) ? -1 : 1)) // from high accuracy to low
         })
@@ -81,12 +74,12 @@ const Image = () => {
     }
 
     const handleApiEndpointChange = (e: Event) => {
-        let updatedCredentials = CREDENTIALS
+        const updatedCredentials = CREDENTIALS
         updatedCredentials.API_ENDPOINT = e.target.value
         setCREDENTIALS(updatedCredentials)
     }
     const handleApiKeyChange = (e: Event) => {
-        let updatedCredentials = CREDENTIALS
+        const updatedCredentials = CREDENTIALS
         updatedCredentials.API_KEY = e.target.value
         setCREDENTIALS(updatedCredentials)
     }
@@ -125,7 +118,7 @@ const Image = () => {
             <div className={styles.tagListContainer}>
                 <ul>
                     {
-                        taglist.map((tag: types.tag) => {
+                        taglist.map((tag: imageTypes.tag) => {
                             return (<li key={tag.label}>{tag.label} (accuracy {Math.floor(tag.accuracy * 10000) / 100} %)</li>)
 
                         })
