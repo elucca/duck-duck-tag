@@ -25,8 +25,9 @@ const tagImageIBM = ( credentials: types.credentials, image_URL: String ) => {
 
     const API_URL = '/v3/classify?version=2018-03-19&url='
 
-    const URL = BASE_URL + credentials.API_ENDPOINT + API_URL + image_URL
-
+    // Quick fix. Checks if API_ENDPOINT is an URL (if the strings starts with 'http').
+    // If so, the BASE_URL is not used
+    const URL = (credentials.API_ENDPOINT.match(/^http/) ? '' : BASE_URL) + credentials.API_ENDPOINT + API_URL + image_URL
 
     const manipulateTag = (tag: types.tag) => ({ 'label': tag.class.toLowerCase(), 'accuracy': tag.score })
     
