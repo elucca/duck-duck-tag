@@ -70,6 +70,7 @@ const createWindow = async () => {
           }
   });
 
+  
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 
   // @TODO: Use 'ready-to-show' event
@@ -111,12 +112,14 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready',() => {
-
+  
   createWindow(); 
 })
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
+
+  
   if (mainWindow === null) createWindow();
 });

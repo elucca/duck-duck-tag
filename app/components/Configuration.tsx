@@ -14,8 +14,11 @@ const Configuration = ( props: Props ) => {
     const [SERVICE, setSERVICE] = useState('')
 
     useEffect(() => {
-        setSERVICE(services.services[0].name)
-    },[services])
+
+        const defaultService = services[0].name
+        setSERVICE(defaultService)
+        
+    },[])
 
     if (!services) {
         return ''
@@ -29,26 +32,17 @@ const Configuration = ( props: Props ) => {
 
     const handleConfigChange = (e,which) => {
         let alteredConfig
-
         if (configuration) {
             alteredConfig = { ...configuration }
             alteredConfig[which] = e.target.value ? e.target.value : ''
         } else {
-            alteredConfig = { service: SERVICE }
+            alteredConfig = { name: SERVICE }
             alteredConfig[which] = e.target.value ? e.target.value : ''
         }
         addConfiguration(alteredConfig)
     }
 
-    console.log(configuration,SERVICE)
-    
-    const nameOfConfiguration = configuration ? configuration.service : ''
-    const currentService = services.services.find( service => service.name === SERVICE )
-    const valueOfURlQuery = currentService ? currentService.API_URL_QUERY : ''
-    const valueOfURLBASE = currentService ? currentService.API_URL_BASE : ''
-
-    
-
+  
     const displaySecret = (secret) => {
         if (secret) {
             return secret.replace(/./g,'*') 
@@ -64,22 +58,22 @@ const Configuration = ( props: Props ) => {
             </Link>
             <br></br>
             {
-                services.services.map(service => {
+                services.map(service => {
 
                     const style = service.name === SERVICE ? styles.chosenButton :  styles.button
 
-                    return <button className={style}  onClick={() => setSERVICE(service.name)}>{ service.name }</button>
+                    return <button key={service.name} className={style}  onClick={() => setSERVICE(service.name)}>{ service.name }</button>
                 })
             }
             <h5>Base URL:</h5>
-            <input placeholder='Base URL' defaultValue={valueOfURLBASE} onChange={(e) => handleConfigChange(e,'API_URL_BASE')} type='text' ></input>
+            <input placeholder='Base URL'  onChange={(e) => handleConfigChange(e,'API_URL_BASE')} type='text' ></input>
             <br></br>
             <h5>URL query (added to the end of URL):</h5>
-            <input placeholder='URL query' defaultValue={valueOfURlQuery} onChange={(e) => handleConfigChange(e,'API_URL_QUERY')} type='text' ></input>
+            <input placeholder='URL query'  onChange={(e) => handleConfigChange(e,'API_URL_QUERY')} type='text' ></input>
             
             <br></br>
             <h5>API-key:</h5>
-            <input placeholder='API-key' onChange={(e) => handleConfigChange(e,'API_KEY')} type='password' ></input>
+            <input placeholder='API-key'    onChange={(e) => handleConfigChange(e,'API_KEY')} type='password' ></input>
             <br></br>
             <h5>API-endpoint:</h5>
             <input placeholder='API-endpoint'  onChange={(e) => handleConfigChange(e,'API_ENDPOINT')} type='text' ></input>

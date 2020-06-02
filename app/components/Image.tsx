@@ -48,7 +48,6 @@ const Image = (props) => {
             .catch(Error => {
                 setAnimation(Error.toString())
             })
-        c
     }
 
     // The above error can be caused for example when the user calls the wrong tagging service.
