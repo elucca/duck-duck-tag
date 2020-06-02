@@ -1,16 +1,14 @@
-import React from 'react';
+import { connect } from 'react-redux';
 import Image from '../components/Image';
 
 
-const ImagePage = () => {
+function mapStateToProps(state) {
+    return {
+      configuration: state.configuration
+    };
+  }
   
-
-    return(
-        <Image/>
-    )
-
-
-}
-
-
-export default ImagePage
+const mapDispatchToProps = {}
+  
+export default connect(mapStateToProps, mapDispatchToProps)(Image)
+  

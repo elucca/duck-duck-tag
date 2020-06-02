@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import services from '../constants/services.json';
+
 import styles from './Image.css';
 import { CSVLink, CSVDownload } from 'react-csv'
 import routes from '../constants/routes.json';
@@ -11,7 +14,7 @@ import exportTags from '../utils/exportTags'
 import imageTypes from './ImageTypes.ts'
 
 
-const Image = () => {
+const Image = (props) => {
 
     const [imgSource, setImgSource] = useState('')
     const [taglist, setTaglist] = useState([])
@@ -21,6 +24,10 @@ const Image = () => {
 
     const [animation, setAnimation] = useState('')
   
+    const AzureConfig   = props.configuration['Azure']
+    const IbmConfig     = props.configuration['IBM-watson']
+
+    
     const handleClickAzure = () => {
 
         // Display image
@@ -29,7 +36,8 @@ const Image = () => {
         })
         
         // Create and run query to Azure
-        const azureQuery = tagImageAzure(CREDENTIALS,imageURL)
+        const azureQuery = tagImageAzure( AzureConfig ,imageURL)
+        
         setTaglist([])
         setAnimation('processing')
         
@@ -41,6 +49,7 @@ const Image = () => {
             .catch(Error => {
                 setAnimation(Error.toString())
             })
+
     }
 
     // The above error can be caused for example when the user calls the wrong tagging service.
@@ -55,7 +64,7 @@ const Image = () => {
             setImgSource('data:image/png;base64,' + pic)
         })
         // Create and run query to IBM
-        const ibmQuery = tagImageIBM(CREDENTIALS,imageURL)
+        const ibmQuery = tagImageIBM(IbmConfig,imageURL)
         setTaglist([])
         setAnimation('processing')
 
@@ -73,18 +82,6 @@ const Image = () => {
         setImageURL(e.target.value)
     }
 
-    const handleApiEndpointChange = (e: Event) => {
-        const updatedCredentials = CREDENTIALS
-        updatedCredentials.API_ENDPOINT = e.target.value
-        setCREDENTIALS(updatedCredentials)
-    }
-    const handleApiKeyChange = (e: Event) => {
-        const updatedCredentials = CREDENTIALS
-        updatedCredentials.API_KEY = e.target.value
-        setCREDENTIALS(updatedCredentials)
-    }
-
-
     // This could stand to be refactored into separate components
     return (
         <div>
@@ -96,11 +93,6 @@ const Image = () => {
             <h5>URL for image to tag:</h5>
             <input value={imageURL} onChange={handleURLchange} type='text' ></input>
             <br></br>
-            <h5>API-key:</h5>
-            <input placeholder='API-key' onChange={handleApiKeyChange} type='password' ></input>
-            <br></br>
-            <h5>API-endpoint:</h5>
-            <input placeholder='API-endpoint' onChange={handleApiEndpointChange} type='text' ></input>
             <br></br>
             <button className={styles.button} id="azure" onClick={handleClickAzure}>Analyze image with Azure</button>
             <button className={styles.button} id="ibm" onClick={handleClickIBM}>Analyze image with IBM</button>
