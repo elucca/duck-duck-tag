@@ -2,7 +2,9 @@
 const fs = require('fs')
 
 const exportTags = (imgSource, taglist) => {
-    writeRowToFile(makeRow(imgSource, taglist))
+    if (imgSource.length > 0) {
+        imgSource.forEach(writeRowToFile(makeRow(imgSource, taglist)))
+    }
 }
 
 const writeRowToFile = (row: string) => {
@@ -13,7 +15,7 @@ const writeRowToFile = (row: string) => {
 
 const makeRow = (imgSource: string, tagList: Array<any>) => {
     let row = imgSource + ","
-    row += tagList.map(tag => tag.label + ":"  + tag.accuracy) + "\n"
+    row += tagList.map(tag => tag.label + ":" + tag.accuracy) + "\n"
 
     return row
 }

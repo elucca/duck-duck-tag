@@ -18,28 +18,27 @@ const Image = (props) => {
 
     const [imgSource, setImgSource] = useState('')
     const [taglist, setTaglist] = useState([])
-    const [CREDENTIALS, setCREDENTIALS] = useState({ API_KEY: '', API_ENDPOINT: '' })
-
+    const [URLlisting, setURLlisting] = useState(['https://i.picsum.photos/id/256/200/200.jpg'])
     const [imageURL, setImageURL] = useState('https://i.picsum.photos/id/256/200/200.jpg')
 
     const [animation, setAnimation] = useState('')
-  
-    const AzureConfig   = props.configuration['Azure']
-    const IbmConfig     = props.configuration['IBM-watson']
 
-    
+    const AzureConfig = props.configuration['Azure']
+    const IbmConfig = props.configuration['IBM-watson']
+
+
     const handleClickAzure = () => {
 
         // Display image
-        getUrlAsBase64(imageURL).then((pic: string) => {
+        getUrlAsBase64(URLlisting[0]).then((pic: string) => {
             setImgSource('data:image/png;base64,' + pic)
         })
-        
+
         // Create and run query to Azure
-        const azureQuery = tagImageAzure(AzureConfig,imageURL)
+        const azureQuery = tagImageAzure(AzureConfig, URLlisting[0])
         setTaglist([])
         setAnimation('processing')
-        
+
         azureQuery
             .then((Tags: Array<imageTypes.tag>) => {
                 setAnimation('')
@@ -58,11 +57,11 @@ const Image = (props) => {
     const handleClickIBM = () => {
 
         // Display image
-        getUrlAsBase64(imageURL).then((pic: string) => {
+        getUrlAsBase64(URLlisting[0]).then((pic: string) => {
             setImgSource('data:image/png;base64,' + pic)
         })
         // Create and run query to IBM
-        const ibmQuery = tagImageIBM(IbmConfig,imageURL)
+        const ibmQuery = tagImageIBM(IbmConfig, URLlisting[0])
         setTaglist([])
         setAnimation('processing')
 
@@ -73,14 +72,18 @@ const Image = (props) => {
     }
 
     const handleClickExport = () => {
-        exportTags(imageURL, taglist)
+        console.log(URLlisting)
+        exportTags(URLlisting, taglist)
     }
 
     const handleURLchange = (e: Event) => {
         setImageURL(e.target.value)
     }
 
-
+    const handleClickURL = () => {
+        setURLlisting(URLlisting.concat(imageURL))
+        setImageURL('')
+    }
 
     // This could stand to be refactored into separate components
     return (
@@ -90,8 +93,12 @@ const Image = (props) => {
                     <i className="fa fa-arrow-left fa-3x" />
                 </Link>
             </div>
+            <ul id='listed-urls'>
+                {URLlisting.map((url, index) => <li key={index}>{url}</li>)}
+            </ul>
             <h5>URL for image to tag:</h5>
             <input value={imageURL} onChange={handleURLchange} type='text' ></input>
+            <button className={styles.button} id="url" onClick={handleClickURL}>Add image URL</button>
             <br></br>
             <br></br>
             <button className={styles.button} id="azure" onClick={handleClickAzure}>Analyze image with Azure</button>
