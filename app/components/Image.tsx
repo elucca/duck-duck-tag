@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import services from '../constants/services.json';
 
 import styles from './Image.css';
-import { CSVLink, CSVDownload } from 'react-csv'
 import routes from '../constants/routes.json';
+
+import Results from './Results'
 
 import getUrlAsBase64 from '../utils/getUrlAsBase64'
 import tagImageAzure from '../utils/tagImageAzure'
 import tagImageIBM from '../utils/tagImageIbm'
 import exportTags from '../utils/exportTags'
 import imageTypes from './ImageTypes'
-
 
 
 const Image = (props) => {
@@ -28,78 +26,46 @@ const Image = (props) => {
     const AzureConfig = props.configuration['Azure']
     const IbmConfig = props.configuration['IBM-watson']
 
-    const addJob = props.addJob
-
     const job = props.job
+    const setJob = props.setJob
 
 
-    const handleJobChange = (service, url, tags) => {
+    const handleJobChange = (tags) => {
 
         const newJob = {
             sessionJobID: job.sessionJobID + 1,
-            services: [
-                {
-                    serviceName: service,
-                    images: [
-                        {
-                            imgURL: url,
-                            taglist: tags
-                        }
-                    ]
-                }
-            ]
-        }
-        
-        addJob(newJob)
+            result: tags
+        } 
+        setJob(newJob)
     }
 
 
-    const handleClickAzure = () => {
+    const handleAnalyzeClick = () => {
 
-        // Display image
-        getUrlAsBase64(URLlisting[0]).then((pic: string) => {
-            setImgSource('data:image/png;base64,' + pic)
-        })
-
-        // Create and run query to Azure
-        const azureQuery = tagImageAzure(AzureConfig, URLlisting[0])
         setTaglist([])
         setAnimation('processing')
 
-        azureQuery
-            .then((tags: Array<imageTypes.tag>) => {
-                setAnimation('')
-                setTaglist(tags)
-                handleJobChange("Azure", URLlisting[0], tags) // does not work with taglist, is too late somehow
-            })
-            .catch(Error => {
-                setAnimation(Error.toString())
-            })
-    }
-
-    // The above error can be caused for example when the user calls the wrong tagging service.
-    // In the future it would be better to ensure that it is only possible to call the correct
-    // service with the corresponding credentials.
-
-
-    const handleClickIBM = () => {
-
         // Display image
         getUrlAsBase64(URLlisting[0]).then((pic: string) => {
             setImgSource('data:image/png;base64,' + pic)
         })
-        // Create and run query to IBM
+        // Create IBM-query
         const ibmQuery = tagImageIBM(IbmConfig, URLlisting[0])
-        setTaglist([])
-        setAnimation('processing')
+        
+        // Create Azure-query
+        const azureQuery = tagImageAzure(AzureConfig, URLlisting[0])
 
-        ibmQuery
-            .then((tags: Array<imageTypes.tag>) => {
-                setAnimation('')
-                let sortedTags = tags.sort((tag1, tag2) => (tag1.accuracy > tag2.accuracy) ? -1 : 1)
-                setTaglist(sortedTags)
-                handleJobChange("IBM-watson", URLlisting[0], sortedTags)
-            })
+        // RUn queries
+        Promise.all([ibmQuery,azureQuery]).then((values: Array<imageTypes.tag>) => {
+
+            const tags = values.flat() // values is a nested array: each service is it's own array
+            setAnimation('')            
+
+            let sortedTags = tags.sort((tag1, tag2) => (tag1.accuracy > tag2.accuracy) ? -1 : 1)
+            setTaglist(sortedTags)
+            handleJobChange(sortedTags)
+            
+        })
     }
 
     const handleClickExport = () => {
@@ -132,8 +98,9 @@ const Image = (props) => {
             <button className={styles.button} id="url" onClick={handleClickURL}>Add image URL</button>
             <br></br>
             <br></br>
-            <button className={styles.button} id="azure" onClick={handleClickAzure}>Analyze image with Azure</button>
-            <button className={styles.button} id="ibm" onClick={handleClickIBM}>Analyze image with IBM</button>
+            
+            <button className={styles.button} id="analyze-button" onClick={handleAnalyzeClick}>Analyze images</button>
+          
             <br></br>
             <button className={styles.button} id="export" onClick={handleClickExport}>Export tags</button>
             <br></br>
@@ -145,16 +112,7 @@ const Image = (props) => {
             <div>
                 <p>{animation}</p>
             </div>
-            <div className={styles.tagListContainer}>
-                <ul>
-                    {
-                        taglist.map((tag: imageTypes.tag) => {
-                            return (<li key={tag.label}>{tag.label} (accuracy {Math.floor(tag.accuracy * 10000) / 100} %)</li>)
-
-                        })
-                    }
-                </ul>
-            </div>
+            <Results taglist={taglist} />
         </div>
     )
 }

@@ -3,6 +3,7 @@ const axios = require('axios')
 
 declare namespace types {
     interface tag {
+        service: string,
         name: string,
         confidence: string
     }
@@ -35,7 +36,14 @@ const tagImageAzure = ( configuration: types.configuration, image_URL: string) =
     const API_URL = configuration.API_ENDPOINT.concat(configuration.API_URL_QUERY);
 
 
-    const manipulateTag = (tag: types.tag) => ({ 'label': tag.name.toLowerCase(), 'accuracy': tag.confidence })
+    const manipulateTag = (tag: types.tag) => (
+        { 
+            imgURL: image_URL, 
+            service: 'Azure', 
+            label: tag.name.toLowerCase(), 
+            accuracy: tag.confidence 
+        }
+    )
 
     const query = axios.post(API_URL,{"url": image_URL },{ headers: headers }).then((response: types.response) => { 
         return response.data.tags.map(manipulateTag)

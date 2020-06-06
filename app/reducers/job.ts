@@ -1,17 +1,7 @@
 
 const emptyJob = {
     sessionJobID: 0,
-    services: [
-        {
-            serviceName: '',
-            images: [
-                {
-                    imgURL: '',
-                    taglist: []
-                }
-            ]
-        }
-    ]
+    result: []
 }
 
 const job = (state = emptyJob, action) => {
