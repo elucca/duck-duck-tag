@@ -70,7 +70,7 @@ const Image = (props) => {
 
     const handleClickExport = () => {
         console.log(URLlisting)
-        exportTags(URLlisting, taglist)
+        exportTags(taglist)
     }
 
     const handleURLchange = (e: Event) => {

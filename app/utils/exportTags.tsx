@@ -1,23 +1,25 @@
 
 const fs = require('fs')
 
-const exportTags = (imgSource, taglist) => {
-    if (imgSource.length > 0) {
-        imgSource.forEach(writeRowToFile(makeRow(imgSource, taglist)))
-    }
+const exportTags = (taglist) => {    
+    const rows = taglist.map(makeRow)
+
+    writeRowsToFile(rows)
 }
 
-const writeRowToFile = (row: string) => {
+
+const makeRow = (tag) => {
+    const ts = new Date()
+    return [tag.service, tag.label, tag.accuracy, tag.imgURL, ts].join(';').concat('\n')
+}
+
+
+const writeRowsToFile = (rows: Array<string>) => {
     let stream = fs.createWriteStream("export.csv", { flags: 'a' })
-    stream.write(row)
+
+    rows.forEach(row => stream.write(row))
+
     stream.end()
-}
-
-const makeRow = (imgSource: string, tagList: Array<any>) => {
-    let row = imgSource + ","
-    row += tagList.map(tag => tag.label + ":" + tag.accuracy) + "\n"
-
-    return row
 }
 
 export default exportTags
