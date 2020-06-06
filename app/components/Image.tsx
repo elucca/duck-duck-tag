@@ -7,6 +7,8 @@ import styles from './Image.css';
 import { CSVLink, CSVDownload } from 'react-csv'
 import routes from '../constants/routes.json';
 
+import Results from './Results'
+
 import getUrlAsBase64 from '../utils/getUrlAsBase64'
 import tagImageAzure from '../utils/tagImageAzure'
 import tagImageIBM from '../utils/tagImageIbm'
@@ -27,45 +29,30 @@ const Image = (props) => {
     const IbmConfig = props.configuration['IBM-watson']
 
 
-    const handleClickAzure = () => {
-
-        // Display image
-        getUrlAsBase64(URLlisting[0]).then((pic: string) => {
-            setImgSource('data:image/png;base64,' + pic)
-        })
-
-        // Create and run query to Azure
-        const azureQuery = tagImageAzure(AzureConfig, URLlisting[0])
-        setTaglist([])
-        setAnimation('processing')
-
-        azureQuery
-            .then((Tags: Array<imageTypes.tag>) => {
-                setAnimation('')
-                setTaglist(Tags)
-            })
-            .catch(Error => {
-                setAnimation(Error.toString())
-            })
-    }
-
     // The above error can be caused for example when the user calls the wrong tagging service.
     // In the future it would be better to ensure that it is only possible to call the correct
     // service with the corresponding credentials.
 
 
-    const handleClickIBM = () => {
+    const handleAnalyzeClick = () => {
+
+        setTaglist([])
+        setAnimation('processing')
 
         // Display image
         getUrlAsBase64(URLlisting[0]).then((pic: string) => {
             setImgSource('data:image/png;base64,' + pic)
         })
-        // Create and run query to IBM
+        // Create IBM-query
         const ibmQuery = tagImageIBM(IbmConfig, URLlisting[0])
-        setTaglist([])
-        setAnimation('processing')
+        
+        // Create Azure-query
+        const azureQuery = tagImageAzure(AzureConfig, URLlisting[0])
 
-        ibmQuery.then((tags: Array<imageTypes.tag>) => {
+        // RUn queries
+        Promise.all([ibmQuery,azureQuery]).then((values: Array<imageTypes.tag>) => {
+
+            const tags = values.flat() // values is a nested array: each service is it's own array
             setAnimation('')
             setTaglist(tags.sort((tag1, tag2) => (tag1.accuracy > tag2.accuracy) ? -1 : 1)) // from high accuracy to low
         })
@@ -101,8 +88,9 @@ const Image = (props) => {
             <button className={styles.button} id="url" onClick={handleClickURL}>Add image URL</button>
             <br></br>
             <br></br>
-            <button className={styles.button} id="azure" onClick={handleClickAzure}>Analyze image with Azure</button>
-            <button className={styles.button} id="ibm" onClick={handleClickIBM}>Analyze image with IBM</button>
+            
+            <button className={styles.button} id="analyze-button" onClick={handleAnalyzeClick}>Analyze images</button>
+          
             <br></br>
             <button className={styles.button} id="export" onClick={handleClickExport}>Export tags</button>
             <br></br>
@@ -114,16 +102,7 @@ const Image = (props) => {
             <div>
                 <p>{animation}</p>
             </div>
-            <div className={styles.tagListContainer}>
-                <ul>
-                    {
-                        taglist.map((tag: imageTypes.tag) => {
-                            return (<li key={tag.label}>{tag.label} (accuracy {Math.floor(tag.accuracy * 10000) / 100} %)</li>)
-
-                        })
-                    }
-                </ul>
-            </div>
+            <Results taglist={taglist} />
         </div>
     )
 }
