@@ -11,7 +11,8 @@ import getUrlAsBase64 from '../utils/getUrlAsBase64'
 import tagImageAzure from '../utils/tagImageAzure'
 import tagImageIBM from '../utils/tagImageIbm'
 import exportTags from '../utils/exportTags'
-import imageTypes from './ImageTypes.ts'
+import imageTypes from './ImageTypes'
+
 
 
 const Image = (props) => {
@@ -21,10 +22,36 @@ const Image = (props) => {
     const [URLlisting, setURLlisting] = useState(['https://i.picsum.photos/id/256/200/200.jpg'])
     const [imageURL, setImageURL] = useState('https://i.picsum.photos/id/256/200/200.jpg')
 
+
     const [animation, setAnimation] = useState('')
 
     const AzureConfig = props.configuration['Azure']
     const IbmConfig = props.configuration['IBM-watson']
+
+    const addJob = props.addJob
+
+    const job = props.job
+
+
+    const handleJobChange = (service, url, tags) => {
+
+        const newJob = {
+            sessionJobID: job.sessionJobID + 1,
+            services: [
+                {
+                    serviceName: service,
+                    images: [
+                        {
+                            imgURL: url,
+                            taglist: tags
+                        }
+                    ]
+                }
+            ]
+        }
+        
+        addJob(newJob)
+    }
 
 
     const handleClickAzure = () => {
@@ -40,9 +67,10 @@ const Image = (props) => {
         setAnimation('processing')
 
         azureQuery
-            .then((Tags: Array<imageTypes.tag>) => {
+            .then((tags: Array<imageTypes.tag>) => {
                 setAnimation('')
-                setTaglist(Tags)
+                setTaglist(tags)
+                handleJobChange("Azure", URLlisting[0], tags) // does not work with taglist, is too late somehow
             })
             .catch(Error => {
                 setAnimation(Error.toString())
@@ -65,10 +93,13 @@ const Image = (props) => {
         setTaglist([])
         setAnimation('processing')
 
-        ibmQuery.then((tags: Array<imageTypes.tag>) => {
-            setAnimation('')
-            setTaglist(tags.sort((tag1, tag2) => (tag1.accuracy > tag2.accuracy) ? -1 : 1)) // from high accuracy to low
-        })
+        ibmQuery
+            .then((tags: Array<imageTypes.tag>) => {
+                setAnimation('')
+                let sortedTags = tags.sort((tag1, tag2) => (tag1.accuracy > tag2.accuracy) ? -1 : 1)
+                setTaglist(sortedTags)
+                handleJobChange("IBM-watson", URLlisting[0], sortedTags)
+            })
     }
 
     const handleClickExport = () => {
