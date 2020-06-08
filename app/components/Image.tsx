@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import styles from './Image.css';
@@ -10,8 +10,8 @@ import getUrlAsBase64 from '../utils/getUrlAsBase64'
 import tagImageAzure from '../utils/tagImageAzure'
 import tagImageIBM from '../utils/tagImageIbm'
 import exportTags from '../utils/exportTags'
-import imageTypes from './ImageTypes'
-
+import { imageTypes } from './ImageTypes'
+import services from '../constants/services.json'
 
 const Image = (props) => {
 
@@ -19,15 +19,24 @@ const Image = (props) => {
     const [taglist, setTaglist] = useState([])
     const [URLlisting, setURLlisting] = useState(['https://i.picsum.photos/id/256/200/200.jpg'])
     const [imageURL, setImageURL] = useState('https://i.picsum.photos/id/256/200/200.jpg')
-
+    const [servicesToSend, setServicesToSend] = useState({})
 
     const [animation, setAnimation] = useState('')
 
     const AzureConfig = props.configuration['Azure']
-    const IbmConfig = props.configuration['IBM-watson']
+    const IbmConfig = props.configuration['IBM']
 
     const job = props.job
     const setJob = props.setJob
+
+    useEffect(() => {
+
+        let initialServices = {}
+        services.forEach((service: object) => initialServices[service.name] = 0 )
+        
+        
+        setServicesToSend(initialServices)
+    },[])
 
 
     const handleJobChange = (tags) => {
@@ -49,14 +58,28 @@ const Image = (props) => {
         getUrlAsBase64(URLlisting[0]).then((pic: string) => {
             setImgSource('data:image/png;base64,' + pic)
         })
+
+        
+
         // Create IBM-query
         const ibmQuery = tagImageIBM(IbmConfig, URLlisting[0])
         
         // Create Azure-query
         const azureQuery = tagImageAzure(AzureConfig, URLlisting[0])
 
-        // RUn queries
-        Promise.all([ibmQuery,azureQuery]).then((values: Array<imageTypes.tag>) => {
+        const queryArray = []
+
+        if (servicesToSend["IBM"]) {
+
+            queryArray.push(ibmQuery)
+            
+        }
+        if (servicesToSend["Azure"]){
+            queryArray.push(azureQuery)
+        }
+        
+        // Run queries
+        Promise.all(queryArray).then((values: Array<imageTypes.tag>) => {
 
             const tags = values.flat() // values is a nested array: each service is it's own array
             setAnimation('')            
@@ -72,7 +95,6 @@ const Image = (props) => {
         console.log(URLlisting)
         exportTags(taglist)
     }
-
     const handleURLchange = (e: Event) => {
         setImageURL(e.target.value)
     }
@@ -82,6 +104,15 @@ const Image = (props) => {
         setImageURL('')
     }
 
+    const handleSelection = (name: string) => {
+        console.log(name, 'name')
+
+        let changedService = { ...servicesToSend  }
+        changedService[name] = servicesToSend[name] === 1 ? 0 : 1 
+
+        setServicesToSend(changedService)
+        console.log('selected',changedService)
+    }
     // This could stand to be refactored into separate components
     return (
         <div>
@@ -96,6 +127,21 @@ const Image = (props) => {
             <h5>URL for image to tag:</h5>
             <input value={imageURL} onChange={handleURLchange} type='text' ></input>
             <button className={styles.button} id="url" onClick={handleClickURL}>Add image URL</button>
+            <br></br>
+            <div>
+            <form>
+                {
+                    services.map(service => {
+                        return(
+                            <div>
+                                <label key={service.name}>{service.name}</label>
+                                <input name='isSelected' type='checkbox' onChange={() => handleSelection(service.name)} />
+                            </div>
+                        )
+                    })
+                }
+            </form>
+            </div>
             <br></br>
             <br></br>
             

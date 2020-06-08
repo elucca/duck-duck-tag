@@ -33,7 +33,7 @@ const tagImageIBM = ( configuration: types.configuration, image_URL: String ) =>
     const manipulateTag = (tag: types.tag) => (
         { 
             imgURL: image_URL, 
-            service: 'IBM-watson',
+            service: 'IBM',
             label: tag.class.toLowerCase(),
             accuracy: tag.score 
         }
