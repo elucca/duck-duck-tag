@@ -48,9 +48,7 @@ const Image = (props) => {
         setJob(newJob)
     }
 
-
-    const handleAnalyzeClick = () => {
-
+    const sendImages = () => {
         setTaglist([])
         setAnimation('processing')
 
@@ -59,7 +57,6 @@ const Image = (props) => {
             setImgSource('data:image/png;base64,' + pic)
         })
 
-        
 
         // Create IBM-query
         const ibmQuery = tagImageIBM(IbmConfig, URLlisting[0])
@@ -90,6 +87,19 @@ const Image = (props) => {
             
         })
     }
+
+    const handleAnalyzeClick = () => {
+        const serviceArray = Object.keys(servicesToSend).filter(s => servicesToSend[s]).map(s => ` ${s}`)
+        if (serviceArray.length <  1) {
+            alert("Add at least one service")
+        } else {
+         if (window.confirm(`You are sending ${URLlisting.length} images to${serviceArray}`)) {
+            sendImages()
+         }
+        }
+        
+    } 
+
 
     const handleClickExport = () => {
         console.log(URLlisting)
@@ -133,8 +143,8 @@ const Image = (props) => {
                 {
                     services.map(service => {
                         return(
-                            <div>
-                                <label key={service.name}>{service.name}</label>
+                            <div key={service.name}>
+                                <label >{service.name}</label>
                                 <input name='isSelected' type='checkbox' onChange={() => handleSelection(service.name)} />
                             </div>
                         )
