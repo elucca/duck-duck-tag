@@ -1,6 +1,7 @@
 
 const emptyJob = {
     sessionJobID: 0,
+    services: [],
     result: []
 }
 
