@@ -26,13 +26,12 @@ const Results = ({ taglist }) => {
                     {
                         taglist.map((tag: imageTypes.tag) => {
                             return (
-                                <tr key={tag.label}>
+                                <tr key={tag.label + tag.service}>
                                     <td>{tag.label}</td>
                                     <td> {Math.floor(tag.accuracy * 10000) / 100} %</td>
                                     <td> { tag.service }</td>
                                 </tr>
                             )
-
                         })
                     }
             </tbody>
