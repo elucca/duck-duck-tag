@@ -12,6 +12,7 @@ import tagImageIBM from '../utils/tagImageIbm'
 import exportTags from '../utils/exportTags'
 import { imageTypes } from './ImageTypes'
 import services from '../constants/services.json'
+import Analysis from './Analysis';
 
 const Image = (props) => {
 
@@ -39,12 +40,16 @@ const Image = (props) => {
     },[])
 
 
-    const handleJobChange = (tags) => {
+    const handleJobChange = (services, tags) => {
+
+        const serviceNames = Object.keys(services).filter(key => services[key])
 
         const newJob = {
             sessionJobID: job.sessionJobID + 1,
+            services: serviceNames,
             result: tags
-        } 
+        }
+
         setJob(newJob)
     }
 
@@ -83,7 +88,7 @@ const Image = (props) => {
 
             let sortedTags = tags.sort((tag1, tag2) => (tag1.accuracy > tag2.accuracy) ? -1 : 1)
             setTaglist(sortedTags)
-            handleJobChange(sortedTags)
+            handleJobChange(servicesToSend, sortedTags)
             
         })
     }
@@ -115,13 +120,11 @@ const Image = (props) => {
     }
 
     const handleSelection = (name: string) => {
-        console.log(name, 'name')
 
         let changedService = { ...servicesToSend  }
         changedService[name] = servicesToSend[name] === 1 ? 0 : 1 
 
         setServicesToSend(changedService)
-        console.log('selected',changedService)
     }
     // This could stand to be refactored into separate components
     return (
@@ -169,6 +172,9 @@ const Image = (props) => {
                 <p>{animation}</p>
             </div>
             <Results taglist={taglist} />
+            <br></br>
+            <br></br>
+            <Analysis job={job} />
         </div>
     )
 }
