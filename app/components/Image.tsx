@@ -12,7 +12,9 @@ import tagImageIBM from '../utils/tagImageIbm'
 import exportTags from '../utils/exportTags'
 import { imageTypes } from './ImageTypes'
 import services from '../constants/services.json'
-import Analysis from './Analysis';
+import Analysis from './Analysis'
+import WordCloud from './WordCloud'
+
 
 const Image = (props) => {
 
@@ -35,7 +37,7 @@ const Image = (props) => {
         let initialServices = {}
         services.forEach((service: object) => initialServices[service.name] = 0 )
         
-        
+
         setServicesToSend(initialServices)
     },[])
 
@@ -64,20 +66,20 @@ const Image = (props) => {
 
 
         // Create IBM-query
-        const ibmQuery = tagImageIBM(IbmConfig, URLlisting[0])
+        const ibmQueries = URLlisting.map(URL => tagImageIBM(IbmConfig, URL))
         
         // Create Azure-query
-        const azureQuery = tagImageAzure(AzureConfig, URLlisting[0])
+        const azureQuery = URLlisting.map(URL => tagImageAzure(AzureConfig, URL))
 
-        const queryArray = []
+        let queryArray = []
 
         if (servicesToSend["IBM"]) {
 
-            queryArray.push(ibmQuery)
+            queryArray = queryArray.concat(ibmQueries)
             
         }
         if (servicesToSend["Azure"]){
-            queryArray.push(azureQuery)
+            queryArray = queryArray.concat(azureQuery)
         }
         
         // Run queries
@@ -102,7 +104,6 @@ const Image = (props) => {
             sendImages()
          }
         }
-        
     } 
 
 
@@ -174,7 +175,9 @@ const Image = (props) => {
             <Results taglist={taglist} />
             <br></br>
             <br></br>
-            <Analysis job={job} />
+            <Analysis job={job} animation={animation} />
+            <br></br>
+            <WordCloud job={job} animation={animation} />
         </div>
     )
 }
