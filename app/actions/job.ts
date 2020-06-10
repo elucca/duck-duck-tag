@@ -1,7 +1,7 @@
 import { GetState, Dispatch } from '../reducers/types';
 
 
-const addJob = ( jobData ) => {
+const setJob = ( jobData ) => {
 
   return (dispatch: Dispatch) => {  
     dispatch( {
@@ -11,4 +11,4 @@ const addJob = ( jobData ) => {
   }
 }
 
-export default addJob
+export default setJob
