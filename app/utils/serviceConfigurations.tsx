@@ -1,4 +1,7 @@
 import services from '../constants/services.json'
+const axios = require('axios')
+
+
 
 class serviceConfiguration {
 
@@ -7,6 +10,7 @@ class serviceConfiguration {
         this.API_URL_QUERY = configuration.API_URL_QUERY
         this.API_URL_BASE = configuration.API_URL_BASE
         this.API_ENDPOINT = configuration.API_ENDPOINT
+        this.API_KEY =      configuration.API_KEY
     }
 
     setImageURL = image_URL => {
@@ -22,6 +26,7 @@ class serviceConfiguration {
         this.API_URL_QUERY = configuration.API_URL_QUERY
         this.API_URL_BASE = configuration.API_URL_BASE
         this.API_ENDPOINT = configuration.API_ENDPOINT
+        this.API_KEY =      configuration.API_KEY
     }
 
 
@@ -81,10 +86,10 @@ class IBMconfig extends serviceConfiguration {
     }
 
     getHeaders = () => {
-        return {
-            'Ocp-Apim-Subscription-Key': this.API_KEY,
-            'Content-Type': 'application/json'
-        }
+        return (
+            // TODO: 
+            axios.defaults.headers.common['Authorization'] = 'Basic ' + this.API_KEY
+        )
     }
 
     getBody = () => {
@@ -94,7 +99,7 @@ class IBMconfig extends serviceConfiguration {
    
 
     getURL = () => {
-        return (this.API_ENDPOINT.match(/^http/) ? '' : this.API_URL_BASE)  + this.API_ENDPOINT + this.API_URL_QUERY + this.image_URL
+        return (this.API_ENDPOINT.match(/^http/) ? '' : this.API_URL_BASE) + this.API_ENDPOINT + this.API_URL_QUERY + this.image_URL
 
     }
 
@@ -115,6 +120,8 @@ class IBMconfig extends serviceConfiguration {
     }
 
 }
+
+
 
 
 const getServiceConfigurations = () => {

@@ -7,13 +7,11 @@ import routes from '../constants/routes.json';
 import Results from './Results'
 
 import getUrlAsBase64 from '../utils/getUrlAsBase64'
-import tagImageAzure from '../utils/tagImageAzure'
-import tagImageIBM from '../utils/tagImageIbm'
+
 import exportTags from '../utils/exportTags'
 import imageTypes from './ImageTypes'
 
 import getServiceConfigurations from '../utils/serviceConfigurations'
-import services from '../constants/services.json'
 import tagImage from '../utils/tagImage';
 
 const Image = (props) => {
@@ -26,8 +24,6 @@ const Image = (props) => {
 
     const [animation, setAnimation] = useState('')
 
-    const AzureConfig = props.configuration['Azure']
-    const IbmConfig = props.configuration['IBM-watson']
 
     const job = props.job
     const setJob = props.setJob
@@ -53,26 +49,7 @@ const Image = (props) => {
             setImgSource('data:image/png;base64,' + pic)
         })
 
-        /*
-        // Create IBM-query
-        const ibmQuery = tagImageIBM(IbmConfig, URLlisting[0])
         
-        // Create Azure-query
-        const azureQuery = tagImageAzure(AzureConfig, URLlisting[0])
-
-        // RUn queries
-        Promise.all([ibmQuery,azureQuery]).then((values: Array<imageTypes.tag>) => {
-               const tags = values.flat() // values is a nested array: each service is it's own array
-            setAnimation('')            
-
-            let sortedTags = tags.sort((tag1, tag2) => (tag1.accuracy > tag2.accuracy) ? -1 : 1)
-            setTaglist(sortedTags)
-            handleJobChange(sortedTags)
-            
-            
-        })
-        */
-        //const services = getServiceConfigurations()
 
         // 1. Get configurations for services (= found in props.configurations)
         const serviceConfigurations = getServiceConfigurations().map(service =>  {
@@ -84,7 +61,7 @@ const Image = (props) => {
         })
 
         const queries = serviceConfigurations.map(conf => {
-            return(tagImage(conf,URLlisting[0]) )
+            return( tagImage(conf,URLlisting[0]) )
         })
 
         Promise.all(queries).then((values: Array<imageTypes.tag>) => {
