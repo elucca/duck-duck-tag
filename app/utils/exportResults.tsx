@@ -1,8 +1,8 @@
 
 const fs = require('fs')
 
-const exportResults = (result) => {    
-    const rows = result.map(makeRow)
+const exportResults = (job) => {
+    const rows = job.result.map(makeRow)
 
     writeRowsToFile(rows)
 }

@@ -91,10 +91,8 @@ const Image = (props) => {
 
             let sortedResult = result.sort((result1, result2) => (result1.accuracy > result2.accuracy) ? -1 : 1)
             setResult(sortedResult)
-
+            
             handleJobChange(servicesToSend, sortedResult)
-
-
         })
     }
 
@@ -112,7 +110,7 @@ const Image = (props) => {
 
     const handleClickExport = () => {
         console.log(URLlisting)
-        exportResults(result)
+        exportResults(job)
     }
     const handleURLchange = (e: Event) => {
         setImageURL(e.target.value)
@@ -120,7 +118,7 @@ const Image = (props) => {
 
     const handleClickURL = () => {
         setURLlisting(URLlisting.concat(imageURL))
-        setImageURL('')
+        setImageURL('')        
     }
 
     const handleSelection = (name: string) => {
@@ -179,6 +177,7 @@ const Image = (props) => {
             <br></br>
             <br></br>
             <Analysis job={job} animation={animation} />
+            <br></br>
             <br></br>
             <WordCloud job={job} animation={animation} />
         </div>
