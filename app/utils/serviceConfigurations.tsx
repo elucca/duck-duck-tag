@@ -14,8 +14,8 @@ class serviceConfiguration {
         this.API_KEY =      configuration.API_KEY
     }
 
-    setImageURL = image_URL => {
-        this.image_URL = image_URL
+    setImageURL = imgURL => {
+        this.imgURL = imgURL
     }
 
     getName =  () => {
@@ -29,7 +29,6 @@ class serviceConfiguration {
         this.API_ENDPOINT = configuration.API_ENDPOINT
         this.API_KEY =      configuration.API_KEY
     }
-
 
 }
 
@@ -55,14 +54,14 @@ class AzureConfig extends serviceConfiguration {
     }
 
     getBody = () => {        
-        return {"url": this.image_URL } 
+        return {"url": this.imgURL } 
     }
 
-    getHandleResponse = () => {
+    getHandleResponse = (imgURLcorrespondingToResponse) => {
 
         const manipulateTag = (tag: types.tag) => (
             { 
-                imgURL: this.image_URL, 
+                imgURL: imgURLcorrespondingToResponse, 
                 service: this.name, 
                 label: tag.name.toLowerCase(), 
                 accuracy: tag.confidence 
@@ -73,6 +72,8 @@ class AzureConfig extends serviceConfiguration {
             return response.data.tags.map(manipulateTag)
         }
     }
+
+
 
 }
 
@@ -98,15 +99,15 @@ class IBMconfig extends serviceConfiguration {
    
 
     getURL = () => {        
-        return (this.API_ENDPOINT.match(/^http/) ? '' : this.API_URL_BASE) + this.API_ENDPOINT + this.API_URL_QUERY + this.image_URL
+        return (this.API_ENDPOINT.match(/^http/) ? '' : this.API_URL_BASE) + this.API_ENDPOINT + this.API_URL_QUERY + this.imgURL
 
     }
 
-    getHandleResponse = () => {
+    getHandleResponse = (imgURLcorrespondingToResponse) => {
     
         const manipulateTag = (tag: types.tag) => (
             { 
-                imgURL: this.image_URL, 
+                imgURL: imgURLcorrespondingToResponse, 
                 service: this.name,
                 label: tag.class.toLowerCase(),
                 accuracy: tag.score 
@@ -117,6 +118,8 @@ class IBMconfig extends serviceConfiguration {
             return response.data.images[1].classifiers[0].classes.map(manipulateTag)
         }
     }
+
+   
 
 }
 

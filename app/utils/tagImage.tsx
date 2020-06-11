@@ -22,15 +22,15 @@ declare namespace types {
     }
 }
 
-const tagImage = (serviceConfiguration, image_URL: String) => {
+const tagImage = (serviceConfiguration, imgURL: String) => {
 
-    serviceConfiguration.setImageURL(image_URL)
+    serviceConfiguration.setImageURL(imgURL)
 
     const URL               = serviceConfiguration.getURL()
     const headers           = serviceConfiguration.getHeaders()
-    const handleResponse    = serviceConfiguration.getHandleResponse()
+    const handleResponse    = serviceConfiguration.getHandleResponse(imgURL)
     const body              = serviceConfiguration.getBody()
-    
+
     return axios.post(URL, body ,{ headers: headers })
                 .then(handleResponse)
                 .catch(err => {

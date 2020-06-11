@@ -24,9 +24,9 @@ const Results = ({ result }) => {
             </thead>
             <tbody>
                     {
-                        result.map((tag: imageTypes.tag) => {
+                        result.map((tag: imageTypes.tag, index: number) => {
                             return (
-                                <tr key={tag.label + tag.service}>
+                                <tr key={tag.label + tag.service + index}>
                                     <td>{tag.label}</td>
                                     <td> {Math.floor(tag.accuracy * 10000) / 100} %</td>
                                     <td> { tag.service }</td>
