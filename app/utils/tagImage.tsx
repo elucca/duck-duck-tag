@@ -24,6 +24,8 @@ declare namespace types {
 
 const tagImage = (serviceConfiguration, image_URL: String) => {
 
+    serviceConfiguration.setImageURL(image_URL)
+
     const URL               = serviceConfiguration.getURL()
     const headers           = serviceConfiguration.getHeaders()
     const handleResponse    = serviceConfiguration.getHandleResponse()
