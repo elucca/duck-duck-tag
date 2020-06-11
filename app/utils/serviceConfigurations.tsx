@@ -68,9 +68,7 @@ class AzureConfig extends serviceConfiguration {
             }
         )
 
-        return (response) => {
-            console.log('azure response', response.data.tags)
-            
+        return (response) => {       
             return response.data.tags.map(manipulateTag)
         }
     }
@@ -118,7 +116,6 @@ class IBMconfig extends serviceConfiguration {
         )
 
         return (response) => {
-            console.log('IBM response ', response.data.images[1].classifiers[0].classes)
             return response.data.images[1].classifiers[0].classes.map(manipulateTag)
         }
     }
