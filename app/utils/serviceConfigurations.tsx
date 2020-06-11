@@ -1,4 +1,5 @@
 import services from '../constants/services.json'
+import { types } from '@babel/core'
 const axios = require('axios')
 
 
@@ -53,7 +54,7 @@ class AzureConfig extends serviceConfiguration {
         return this.API_ENDPOINT.concat(this.API_URL_QUERY);
     }
 
-    getBody = () => {
+    getBody = () => {        
         return {"url": this.image_URL } 
     }
 
@@ -84,11 +85,10 @@ class IBMconfig extends serviceConfiguration {
     }
 
     getHeaders = () => {
-        return (
-            {}
-            // TODO: 
-           // axios.defaults.headers.common['Authorization'] = 'Basic ' + this.API_KEY
-        )
+        const apikey = btoa(`apikey:${this.API_KEY}`)
+        const header = axios.defaults.headers.common['Authorization'] = `Basic ${apikey}`
+
+        return {header}
     }
 
     getBody = () => {
@@ -97,15 +97,13 @@ class IBMconfig extends serviceConfiguration {
 
    
 
-    getURL = () => {
+    getURL = () => {        
         return (this.API_ENDPOINT.match(/^http/) ? '' : this.API_URL_BASE) + this.API_ENDPOINT + this.API_URL_QUERY + this.image_URL
 
     }
 
     getHandleResponse = () => {
-
-        
-
+    
         const manipulateTag = (tag: types.tag) => (
             { 
                 imgURL: this.image_URL, 
