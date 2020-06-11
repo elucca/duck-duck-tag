@@ -35,7 +35,7 @@ const WordCloud = ({ job, animation }) => {
             {
                 services.map(service => {
                     return(
-                        <div className={styles.row}>
+                        <div key={service} className={styles.row}>
                             <ReactWordcloud options={options}
                             words={tags(service)} />
                         </div>
