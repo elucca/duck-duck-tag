@@ -2,14 +2,14 @@ import React from 'react'
 import imageTypes from './ImageTypes.ts'
 
 
-const Results = ({ taglist }) => {
+const Results = ({ result }) => {
 
 
-    if (!taglist) {
+    if (!result) {
         return ''
     }
 
-    if (taglist.length === 0) {
+    if (result.length === 0) {
         return ''
     }
 
@@ -18,13 +18,13 @@ const Results = ({ taglist }) => {
             <thead>
                 <tr>
                     <th>Tag</th>
-                    <th>Accurary</th>
+                    <th>Accuracy</th>
                     <th>Service</th>
                 </tr>
             </thead>
             <tbody>
                     {
-                        taglist.map((tag: imageTypes.tag) => {
+                        result.map((tag: imageTypes.tag) => {
                             return (
                                 <tr key={tag.label + tag.service}>
                                     <td>{tag.label}</td>
