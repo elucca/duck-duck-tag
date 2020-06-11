@@ -65,19 +65,23 @@ const Image = (props) => {
 
         
 
-        // 1. Get configurations for services (= found in props.configurations)
-        const serviceConfigurations = getServiceConfigurations().map(service =>  {
-            const conf =  props.configuration[service.getName()] 
-            if (conf) {
-                service.updateConfiguration(conf)
-                return service
-            }
-        })
+        // Get configurations for services (= found in props.configurations)
+        // Filter: only configurations selected by the user
+        const serviceConfigurations = getServiceConfigurations()
+                    .map(service =>  {
+                        const conf =  props.configuration[service.getName()] 
+                        if (conf) {
+                            service.updateConfiguration(conf)
+                            return service
+                        }
+                    }).filter(serviceConfig =>  servicesToSend[ serviceConfig.getName() ] )
+
+
 
         const queries = serviceConfigurations.map(conf => {
-            return( URLlisting.map(URL => tagImage(conf, URL) ) ) 
-        })
-        
+                return( URLlisting.map(URL => tagImage(conf, URL) ) ) 
+            })
+            
         
 
         Promise.all(queries.flat()).then((values: Array<imageTypes.tag>) => {
