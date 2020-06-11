@@ -5,3 +5,4 @@ app/dist/*
 app/main.prod.js
 export.csv
 .eslintcache
+dll/
