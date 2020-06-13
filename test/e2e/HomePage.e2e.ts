@@ -19,6 +19,14 @@ const assertNoConsoleErrors = async t => {
 
 fixture`Home Page`.page('../../app/app.html').afterEach(assertNoConsoleErrors);
 
+test('should navigate to Analyze Images with click to link', async t => {
+  await t
+    .click(Selector('a').withExactText('Analyze images'))
+    .expect(getPageUrl())
+    .contains('/image')
+})
+
+/*
 test('e2e', async t => {
   await t.expect(getPageTitle()).eql('Hello Electron React!');
 });
@@ -95,3 +103,32 @@ test('should back to home if back button clicked', async t => {
     .expect(Selector('[data-tid="container"]').visible)
     .ok();
 });
+*/
+    .expect(Selector('[data-tid="container"]').visible)
+    .ok();
+});
+*/
+    .expect(Selector('[data-tid="container"]').visible)
+    .ok();
+});
+*/
+    .expect(Selector('[data-tid="container"]').visible)
+    .ok();
+});
+*/
+    .expect(Selector('[data-tid="container"]').visible)
+    .ok();
+});
+*/
+    .expect(Selector('[data-tid="container"]').visible)
+    .ok();
+});
+*/
+    .expect(Selector('[data-tid="container"]').visible)
+    .ok();
+});
+*/
+    .expect(Selector('[data-tid="container"]').visible)
+    .ok();
+});
+*/
