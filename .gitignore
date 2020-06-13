@@ -6,3 +6,4 @@ app/main.prod.js
 export.csv
 .eslintcache
 dll/
+yarn-error.log
