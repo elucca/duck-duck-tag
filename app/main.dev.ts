@@ -14,7 +14,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
 
-
+/* eslint  @typescript-eslint/no-var-requires: 0 */  
 
 export default class AppUpdater {
   constructor() {

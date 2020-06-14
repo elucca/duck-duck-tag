@@ -103,32 +103,9 @@ test('should back to home if back button clicked', async t => {
     .expect(Selector('[data-tid="container"]').visible)
     .ok();
 });
-*/
+
     .expect(Selector('[data-tid="container"]').visible)
     .ok();
 });
 */
-    .expect(Selector('[data-tid="container"]').visible)
-    .ok();
-});
-*/
-    .expect(Selector('[data-tid="container"]').visible)
-    .ok();
-});
-*/
-    .expect(Selector('[data-tid="container"]').visible)
-    .ok();
-});
-*/
-    .expect(Selector('[data-tid="container"]').visible)
-    .ok();
-});
-*/
-    .expect(Selector('[data-tid="container"]').visible)
-    .ok();
-});
-*/
-    .expect(Selector('[data-tid="container"]').visible)
-    .ok();
-});
-*/
+  

@@ -1,28 +1,7 @@
-const axios = require('axios')
+import axios from 'axios'
+import ServiceConfiguration   from './ServiceConfiguration'
 
-
-declare namespace types {
-    interface tag {
-        service: string,
-        class: string,
-        score: string
-    }
-
-    interface response {
-        data: {
-            tags: Array<tag>
-        }
-    }
-
-    interface configuration {
-        API_KEY: string,
-        API_ENDPOINT: string,
-        API_URL_QUERY: string,
-        API_URL_BASE: string
-    }
-}
-
-const tagImage = (serviceConfiguration, imgURL: String) => {
+const tagImage = (serviceConfiguration: ServiceConfiguration, imgURL: string) => {
 
     serviceConfiguration.setImageURL(imgURL)
 

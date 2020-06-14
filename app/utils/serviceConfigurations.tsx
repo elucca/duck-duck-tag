@@ -1,10 +1,10 @@
 import services from '../constants/services.json'
 import { types } from '@babel/core'
-const axios = require('axios')
+import axios from 'axios'
 
 
 
-class serviceConfiguration {
+class ServiceConfiguration {
 
     constructor(configuration) {
         this.name = configuration.name
@@ -32,7 +32,7 @@ class serviceConfiguration {
 
 }
 
-class AzureConfig extends serviceConfiguration {
+class AzureConfig extends ServiceConfiguration {
 
     constructor(configuration) {
         super(configuration)
@@ -79,7 +79,7 @@ class AzureConfig extends serviceConfiguration {
 
 
 
-class IBMconfig extends serviceConfiguration {
+class IBMconfig extends ServiceConfiguration {
 
     constructor(configuration) {
         super(configuration)
@@ -127,7 +127,8 @@ class IBMconfig extends serviceConfiguration {
 
 
 const getServiceConfigurations = () => {
-    let serviceConfigs = []
+    
+    const serviceConfigs = []
 
     serviceConfigs.push( new AzureConfig(  services.find(serv => serv.name==='Azure') )  )
     serviceConfigs.push( new IBMconfig(    services.find(serv => serv.name==='IBM') )  )

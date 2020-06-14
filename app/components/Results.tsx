@@ -1,5 +1,5 @@
 import React from 'react'
-import imageTypes from './ImageTypes.ts'
+import Tag from './Tag.ts'
 
 
 const Results = ({ result }) => {
@@ -24,7 +24,7 @@ const Results = ({ result }) => {
             </thead>
             <tbody>
                     {
-                        result.map((tag: imageTypes.tag, index: number) => {
+                        result.map((tag: Tag, index: number) => {
                             return (
                                 <tr key={tag.label + tag.service + index}>
                                     <td>{tag.label}</td>

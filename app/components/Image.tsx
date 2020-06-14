@@ -9,7 +9,7 @@ import Results from './Results'
 import getUrlAsBase64 from '../utils/getUrlAsBase64'
 
 import exportResults from '../utils/exportResults'
-import { imageTypes } from './ImageTypes'
+import Tag from './Tag'
 import services from '../constants/services.json'
 import Analysis from './Analysis'
 import WordCloud from './WordCloud'
@@ -33,7 +33,7 @@ const Image = (props) => {
 
     useEffect(() => {
 
-        let initialServices = {}
+        const initialServices = {}
         services.forEach((service: object) => initialServices[service.name] = 0)
 
 
@@ -84,12 +84,12 @@ const Image = (props) => {
 
 
 
-        Promise.all(queries.flat()).then((values: Array<imageTypes.tag>) => {
+        Promise.all(queries.flat()).then((values: Array<Tag>) => {
 
             const result = values.flat() // values is a nested array: each service is it's own array
             setAnimation('')
 
-            let sortedResult = result.sort((result1, result2) => (result1.accuracy > result2.accuracy) ? -1 : 1)
+            const sortedResult = result.sort((result1, result2) => (result1.accuracy > result2.accuracy) ? -1 : 1)
             setResult(sortedResult)
             
             handleJobChange(servicesToSend, sortedResult)
@@ -123,7 +123,7 @@ const Image = (props) => {
 
     const handleSelection = (name: string) => {
 
-        let changedService = { ...servicesToSend }
+        const changedService = { ...servicesToSend }
         changedService[name] = servicesToSend[name] === 1 ? 0 : 1
 
         setServicesToSend(changedService)

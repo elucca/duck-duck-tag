@@ -1,12 +1,5 @@
 
-const fs = require('fs')
-
-const exportResults = (job) => {
-    const rows = job.result.map(makeRow)
-
-    writeRowsToFile(rows)
-}
-
+import fs  from 'fs'
 
 const makeRow = (result) => {
     const ts = new Date()
@@ -15,11 +8,19 @@ const makeRow = (result) => {
 
 
 const writeRowsToFile = (rows: Array<string>) => {
-    let stream = fs.createWriteStream("export.csv", { flags: 'a' })
+    const stream = fs.createWriteStream("export.csv", { flags: 'a' })
 
     rows.forEach(row => stream.write(row))
 
     stream.end()
 }
+
+const exportResults = (job) => {
+    const rows = job.result.map(makeRow)
+
+    writeRowsToFile(rows)
+}
+
+
 
 export default exportResults

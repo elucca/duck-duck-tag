@@ -4,11 +4,11 @@ import services from '../constants/services.json';
 
 
 const servicesArrayToConfigObject = servicesArray => {
-    let object = {}
+    const object = {}
 
     let service 
-    for (let serviceIndex in services) {
-      service = services[serviceIndex]
+    for (const serviceIndex in servicesArray) {
+      service = servicesArray[serviceIndex]
       object[service.name] = { ...service }
     }
 
@@ -19,10 +19,12 @@ const servicesArrayToConfigObject = servicesArray => {
 const configuration = (state = servicesArrayToConfigObject(services) ,action) => {
 
 
+  let alteredState
+
   switch (action.type) {
   
     case 'SET':
-      let alteredState = { ...state }
+      alteredState = { ...state }
       alteredState[action.data.name] = action.data
       return alteredState
 

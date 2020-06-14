@@ -1,19 +1,14 @@
 // https://stackoverflow.com/questions/41846669/download-an-image-using-axios-and-convert-it-to-base64
 
-const axios = require('axios')
-
-declare namespace types {
-    interface Response {
-        data: string
-    }
-}
+import axios  from 'axios'
 
 
-const getUrlAsBase64 = (url: String) => {
+
+const getUrlAsBase64 = (url: string) => {
     return axios.get(url, {
         responseType: 'arraybuffer'
       })
-      .then((response: types.Response) =>  Buffer.from(response.data, 'binary').toString('base64'))
+      .then(response =>  Buffer.from(response.data, 'binary').toString('base64'))
   }
 
 
