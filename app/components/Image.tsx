@@ -17,11 +17,16 @@ import WordCloud from './WordCloud'
 import getServiceConfigurations from '../utils/serviceConfigurations'
 import tagImage from '../utils/tagImage';
 
+import getFile from '../utils/getFile'
+
+const { dialog } = require('electron').remote
+
 const Image = (props) => {
 
     const [imgSource, setImgSource] = useState('')
     const [result, setResult] = useState([])
     const [URLlisting, setURLlisting] = useState(['https://i.picsum.photos/id/256/200/200.jpg'])
+    const [pathListing, setPathListing] = useState([])
     const [imageURL, setImageURL] = useState('https://i.picsum.photos/id/256/200/200.jpg')
     const [servicesToSend, setServicesToSend] = useState({})
 
@@ -91,7 +96,7 @@ const Image = (props) => {
 
             const sortedResult = result.sort((result1, result2) => (result1.accuracy > result2.accuracy) ? -1 : 1)
             setResult(sortedResult)
-            
+
             handleJobChange(servicesToSend, sortedResult)
         })
     }
@@ -107,7 +112,6 @@ const Image = (props) => {
         }
     }
 
-
     const handleClickExport = () => {
         console.log(URLlisting)
         exportResults(job)
@@ -118,7 +122,20 @@ const Image = (props) => {
 
     const handleClickURL = () => {
         setURLlisting(URLlisting.concat(imageURL))
-        setImageURL('')        
+        setImageURL('')
+    }
+
+    const handleClickLocal = () => {
+        dialog.showOpenDialog({
+            properties: ['openFile', 'multiSelections'],
+            filters: [
+                { name: 'Images', extensions: ['jpg', 'png', 'gif'] },
+            ]
+        }).then(result => {
+            setPathListing(pathListing.concat(result.filePaths))
+        }).catch(err => {
+            console.log(err)
+        })
     }
 
     const handleSelection = (name: string) => {
@@ -128,6 +145,7 @@ const Image = (props) => {
 
         setServicesToSend(changedService)
     }
+
     // This could stand to be refactored into separate components
     return (
         <div>
@@ -142,6 +160,7 @@ const Image = (props) => {
             <h5>URL for image to tag:</h5>
             <input value={imageURL} onChange={handleURLchange} type='text' ></input>
             <button className={styles.button} id="url" onClick={handleClickURL}>Add image URL</button>
+            <button className={styles.button} id="url" onClick={handleClickLocal}>Add local images</button>
             <br></br>
             <div>
                 <form>
