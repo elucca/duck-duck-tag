@@ -19,7 +19,7 @@ import tagImage from '../utils/tagImage';
 
 import getFile from '../utils/getFile'
 
-const { dialog } = require('electron').remote
+const { remote } = require('electron')
 
 const Image = (props) => {
 
@@ -126,7 +126,7 @@ const Image = (props) => {
     }
 
     const handleClickLocal = () => {
-        dialog.showOpenDialog({
+        remote.dialog.showOpenDialog({
             properties: ['openFile', 'multiSelections'],
             filters: [
                 { name: 'Images', extensions: ['jpg', 'png', 'gif'] },

@@ -4,9 +4,11 @@ const Analysis = ({ job, animation }) => {
 
     const result = job.result
 
+    
     if (!result || result.length === 0 || animation) {
-        return ''
+        return null
     }
+    
 
     const services = job.services
 
