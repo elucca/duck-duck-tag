@@ -1,13 +1,14 @@
 import axios from 'axios'
-import ServiceConfiguration   from './ServiceConfiguration'
+import ServiceConfiguration from './ServiceConfiguration'
+import Path from '../components/Path'
 
-const tagImage = (serviceConfiguration: ServiceConfiguration, imgURL: string) => {
+const tagImage = (serviceConfiguration: ServiceConfiguration, path: Path) => {
 
-    serviceConfiguration.setImageURL(imgURL)
+    serviceConfiguration.setImagePath(path)
 
     const URL               = serviceConfiguration.getURL()
     const headers           = serviceConfiguration.getHeaders()
-    const handleResponse    = serviceConfiguration.getHandleResponse(imgURL)
+    const handleResponse    = serviceConfiguration.getHandleResponse(path)
     const body              = serviceConfiguration.getBody()
 
     return axios.post(URL, body ,{ headers: headers })

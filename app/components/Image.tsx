@@ -17,16 +17,13 @@ import WordCloud from './WordCloud'
 import getServiceConfigurations from '../utils/serviceConfigurations'
 import tagImage from '../utils/tagImage';
 
-import getFile from '../utils/getFile'
-
-const { dialog } = require('electron').remote
+const { remote } = require('electron')
 
 const Image = (props) => {
 
     const [imgSource, setImgSource] = useState('')
     const [result, setResult] = useState([])
-    const [URLlisting, setURLlisting] = useState(['https://i.picsum.photos/id/256/200/200.jpg'])
-    const [pathListing, setPathListing] = useState([])
+    const [pathListing, setPathListing] = useState([{ type: 'url', path: 'https://i.picsum.photos/id/256/200/200.jpg' }])
     const [imageURL, setImageURL] = useState('https://i.picsum.photos/id/256/200/200.jpg')
     const [servicesToSend, setServicesToSend] = useState({})
 
@@ -63,12 +60,14 @@ const Image = (props) => {
         setResult([])
         setAnimation('processing')
 
-        // Display image
-        getUrlAsBase64(URLlisting[0]).then((pic: string) => {
-            setImgSource('data:image/png;base64,' + pic)
-        })
-
-
+        // Display image. Currently just displays the first image.
+        // Code will probably be used in the future to  display images in the list, maybe on mouseover of path?
+        // Doesn't handle local image right now.
+        if (pathListing[0].type === 'url') {
+            getUrlAsBase64(pathListing[0].path).then((pic: string) => {
+                setImgSource('data:image/png;base64,' + pic)
+            })
+        }
 
         // Get configurations for services (= found in props.configurations)
         // Filter: only configurations selected by the user
@@ -81,13 +80,9 @@ const Image = (props) => {
                 }
             }).filter(serviceConfig => servicesToSend[serviceConfig.getName()])
 
-
-
         const queries = serviceConfigurations.map(conf => {
-            return (URLlisting.map(URL => tagImage(conf, URL)))
+            return (pathListing.map(path => tagImage(conf, path)))
         })
-
-
 
         Promise.all(queries.flat()).then((values: Array<Tag>) => {
 
@@ -106,14 +101,13 @@ const Image = (props) => {
         if (serviceArray.length < 1) {
             alert("Add at least one service")
         } else {
-            if (window.confirm(`You are sending ${URLlisting.length} images to${serviceArray}`)) {
+            if (window.confirm(`You are sending ${pathListing.length} images to${serviceArray}`)) {
                 sendImages()
             }
         }
     }
 
     const handleClickExport = () => {
-        console.log(URLlisting)
         exportResults(job)
     }
     const handleURLchange = (e: Event) => {
@@ -121,18 +115,21 @@ const Image = (props) => {
     }
 
     const handleClickURL = () => {
-        setURLlisting(URLlisting.concat(imageURL))
+        setPathListing(pathListing.concat({ type: 'url', path: imageURL }))
         setImageURL('')
     }
 
     const handleClickLocal = () => {
-        dialog.showOpenDialog({
+        remote.dialog.showOpenDialog({
             properties: ['openFile', 'multiSelections'],
             filters: [
                 { name: 'Images', extensions: ['jpg', 'png', 'gif'] },
             ]
         }).then(result => {
-            setPathListing(pathListing.concat(result.filePaths))
+            let paths = result.filePaths.map(filePath => {
+                return {type: 'localPath', path: filePath}
+            })
+            setPathListing(pathListing.concat(paths))
         }).catch(err => {
             console.log(err)
         })
@@ -155,12 +152,12 @@ const Image = (props) => {
                 </Link>
             </div>
             <ul id='listed-urls'>
-                {URLlisting.map((url, index) => <li key={index}>{url}</li>)}
+                {pathListing.map((path, index) => <li key={index}>{path.path}</li>)}
             </ul>
             <h5>URL for image to tag:</h5>
             <input value={imageURL} onChange={handleURLchange} type='text' ></input>
             <button className={styles.button} id="url" onClick={handleClickURL}>Add image URL</button>
-            <button className={styles.button} id="url" onClick={handleClickLocal}>Add local images</button>
+            <button className={styles.button} id="url" onClick={handleClickLocal}>Add local images (Not fully implemented)</button>
             <br></br>
             <div>
                 <form>

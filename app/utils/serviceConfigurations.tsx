@@ -1,33 +1,39 @@
 import services from '../constants/services.json'
-import { types } from '@babel/core'
 import axios from 'axios'
-
-
+import Path from '../components/Path'
 
 class ServiceConfiguration {
+
+    name: string
+    API_URL_QUERY: string
+    API_URL_BASE: string
+    API_ENDPOINT: string
+    API_KEY: string
+
+    imgPath: Path
 
     constructor(configuration) {
         this.name = configuration.name
         this.API_URL_QUERY = configuration.API_URL_QUERY
         this.API_URL_BASE = configuration.API_URL_BASE
         this.API_ENDPOINT = configuration.API_ENDPOINT
-        this.API_KEY =      configuration.API_KEY
+        this.API_KEY = configuration.API_KEY
+        this.imgPath = { type: '', path: '' }
     }
 
-    setImageURL = imgURL => {
-        this.imgURL = imgURL
+    setImagePath = (imgPath: Path) => {
+        this.imgPath = imgPath
     }
 
-    getName =  () => {
+    getName = () => {
         return this.name
     }
-
 
     updateConfiguration = configuration => {
         this.API_URL_QUERY = configuration.API_URL_QUERY
         this.API_URL_BASE = configuration.API_URL_BASE
         this.API_ENDPOINT = configuration.API_ENDPOINT
-        this.API_KEY =      configuration.API_KEY
+        this.API_KEY = configuration.API_KEY
     }
 
 }
@@ -38,8 +44,6 @@ class AzureConfig extends ServiceConfiguration {
         super(configuration)
     }
 
-
-
     getHeaders = () => {
         return {
             'Ocp-Apim-Subscription-Key': this.API_KEY,
@@ -47,37 +51,34 @@ class AzureConfig extends ServiceConfiguration {
         }
     }
 
-
-
     getURL = () => {
         return this.API_ENDPOINT.concat(this.API_URL_QUERY);
     }
 
-    getBody = () => {        
-        return {"url": this.imgURL } 
+    getBody = () => {
+        if (this.imgPath.type === 'url') {
+            return { "url": this.imgPath.path }
+        }
+        // TODO: If imgPath.type === 'localPath'        
     }
 
-    getHandleResponse = (imgURLcorrespondingToResponse) => {
+    getHandleResponse = (imgPathCorrespondingToResponse : Path) => {
 
-        const manipulateTag = (tag: types.tag) => (
-            { 
-                imgURL: imgURLcorrespondingToResponse, 
-                service: this.name, 
-                label: tag.name.toLowerCase(), 
-                accuracy: tag.confidence 
+        const manipulateTag = (tag) => (
+            {
+                imgPath: imgPathCorrespondingToResponse.path,
+                service: this.name,
+                label: tag.name.toLowerCase(),
+                accuracy: tag.confidence
             }
         )
 
-        return (response) => {       
+        return (response) => {
             return response.data.tags.map(manipulateTag)
         }
     }
 
-
-
 }
-
-
 
 class IBMconfig extends ServiceConfiguration {
 
@@ -89,28 +90,28 @@ class IBMconfig extends ServiceConfiguration {
         const apikey = btoa(`apikey:${this.API_KEY}`)
         const header = axios.defaults.headers.common['Authorization'] = `Basic ${apikey}`
 
-        return {header}
+        return { header }
     }
 
     getBody = () => {
-        return { } 
+        return {}
     }
 
-   
-
-    getURL = () => {        
-        return (this.API_ENDPOINT.match(/^http/) ? '' : this.API_URL_BASE) + this.API_ENDPOINT + this.API_URL_QUERY + this.imgURL
-
+    getURL = () => {
+        if (this.imgPath.type === 'url') {
+            return (this.API_ENDPOINT.match(/^http/) ? '' : this.API_URL_BASE) + this.API_ENDPOINT + this.API_URL_QUERY + this.imgPath.path
+        }
+        // TODO: If imgPath.type === 'localPath' 
     }
 
-    getHandleResponse = (imgURLcorrespondingToResponse) => {
-    
-        const manipulateTag = (tag: types.tag) => (
-            { 
-                imgURL: imgURLcorrespondingToResponse, 
+    getHandleResponse = (imgPathCorrespondingToResponse : Path) => {
+
+        const manipulateTag = (tag) => (
+            {
+                imgPath: imgPathCorrespondingToResponse.path,
                 service: this.name,
                 label: tag.class.toLowerCase(),
-                accuracy: tag.score 
+                accuracy: tag.score
             }
         )
 
@@ -119,21 +120,16 @@ class IBMconfig extends ServiceConfiguration {
         }
     }
 
-   
-
 }
 
-
-
-
 const getServiceConfigurations = () => {
-    
+
     const serviceConfigs = []
 
-    serviceConfigs.push( new AzureConfig(  services.find(serv => serv.name==='Azure') )  )
-    serviceConfigs.push( new IBMconfig(    services.find(serv => serv.name==='IBM') )  )
+    serviceConfigs.push(new AzureConfig(services.find(serv => serv.name === 'Azure')))
+    serviceConfigs.push(new IBMconfig(services.find(serv => serv.name === 'IBM')))
 
-    return(serviceConfigs)
+    return (serviceConfigs)
 }
 
 

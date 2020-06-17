@@ -1,13 +1,15 @@
+//  import { Path } from "history"; // What is this?
+import Path from '../components/Path'
 
 export default interface ServiceConfiguration {
 
-    setImageURL(imgURL: string): void;
-    getName(): void;
+    setImagePath(imgPath : Path): void;
+    getName(): string;
     updateConfiguration(configuration: {}): void;
-    getHeaders(): void;
-    getURL(): void;
-    getBody(): void;
-    getHandleResponse(imgURLcorrespondingToResponse: string): void;
+    getHeaders(): object;
+    getURL(): string;
+    getBody(): object;
+    getHandleResponse(imgURLcorrespondingToResponse: string): any; // What's the appropriate type for this?
     
 
 }
