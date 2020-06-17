@@ -58,10 +58,14 @@ describe('Analysis component content is correct', () => {
 
   it('should return 50% tag similarity for test case',() => {
     const { component } = setup()
+
+    const secondTableRow = component.find('tr').at(1)
+    const thirdCell = secondTableRow.find('td').at(2)
+
     const thirdTableRow = component.find('tr').at(2)
     const secondCell    = thirdTableRow.find('td').at(1)
 
-    expect( secondCell.text()  ).toBe('50.00')
+    expect( secondCell.text() && thirdCell.text()  ).toBe('50.00')
   })
   
 })
