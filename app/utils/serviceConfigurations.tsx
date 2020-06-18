@@ -48,6 +48,11 @@ class AzureConfig extends ServiceConfiguration {
         return this.API_ENDPOINT.concat(this.API_URL_QUERY);
     }
 
+    getParams = () => {
+        return {
+        }
+    }
+
     getBody = () => {
         if (this.imgPath.type === 'url') {
             return { "url": this.imgPath.path }
@@ -118,9 +123,12 @@ class IBMconfig extends ServiceConfiguration {
                 accuracy: tag.score
             }
         )
+        
 
         return (response) => {
-            return response.data.images[0].classifiers[0].classes.map(manipulateTag)
+        
+            return response.data.images.find(obj => Object.keys(obj).includes('classifiers') ).classifiers[0].classes.map(manipulateTag)
+            
         }
     }
 

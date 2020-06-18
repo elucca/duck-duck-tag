@@ -16,6 +16,7 @@ const Results = ({ job }) => {
         return null
     }
 
+
     return (
         <table>
             <thead>
@@ -27,7 +28,9 @@ const Results = ({ job }) => {
             </thead>
             <tbody>
                     {
+                        
                         result.map((tag: Tag, index: number) => {
+                            
                             return (
                                 <tr key={tag.label + tag.service + index}>
                                     <td>{tag.label}</td>
@@ -36,6 +39,7 @@ const Results = ({ job }) => {
                                 </tr>
                             )
                         })
+                        
                     }
             </tbody>
         </table>

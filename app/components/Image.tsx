@@ -88,6 +88,7 @@ const Image = (props) => {
 
             const result = values.flat() // values is a nested array: each service is it's own array
             setAnimation('')
+            console.log(result)
 
             const sortedResult = result.sort((result1, result2) => (result1.accuracy > result2.accuracy) ? -1 : 1)
             
