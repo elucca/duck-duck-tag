@@ -9,6 +9,7 @@ export default interface ServiceConfiguration {
     getHeaders(): object;
     getURL(): string;
     getBody(): object;
+    getParams(): object;
     getHandleResponse(imgURLcorrespondingToResponse: string): any; // What's the appropriate type for this?
     
 

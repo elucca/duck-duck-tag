@@ -23,8 +23,8 @@ const Image = (props) => {
 
     const [imgSource, setImgSource] = useState('')
     const [result, setResult] = useState([])
-    const [pathListing, setPathListing] = useState([{ type: 'url', path: 'https://i.picsum.photos/id/256/200/200.jpg' }])
-    const [imageURL, setImageURL] = useState('https://i.picsum.photos/id/256/200/200.jpg')
+    const [pathListing, setPathListing] = useState([{ type: 'url', path: 'https://picsum.photos/id/256/200/200.jpg' }])
+    const [imageURL, setImageURL] = useState('https://picsum.photos/id/256/200/200.jpg')
     const [servicesToSend, setServicesToSend] = useState({})
 
     const [animation, setAnimation] = useState('')
