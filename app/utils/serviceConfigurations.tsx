@@ -1,4 +1,4 @@
-import services from '../constants/services.json'
+
 import axios from 'axios'
 import Path from '../components/Path'
 
@@ -90,9 +90,20 @@ class IBMconfig extends ServiceConfiguration {
         return {}
     }
 
+
+    getParams = () => {
+        return {
+            version: "2018-03-19",
+            url: this.imgPath.path
+            //images_file: getFile(this.imgPath.path)
+        }
+    }
+
+
     getURL = () => {
         if (this.imgPath.type === 'url') {
-            return (this.API_ENDPOINT.match(/^http/) ? '' : this.API_URL_BASE) + this.API_ENDPOINT + this.API_URL_QUERY + this.imgPath.path
+            return (this.API_ENDPOINT.match(/^http/) ? '' : this.API_URL_BASE) + this.API_ENDPOINT + this.API_URL_QUERY
+            // + this.imgPath.path
         }
         // TODO: If imgPath.type === 'localPath' 
     }
@@ -109,7 +120,7 @@ class IBMconfig extends ServiceConfiguration {
         )
 
         return (response) => {
-            return response.data.images[1].classifiers[0].classes.map(manipulateTag)
+            return response.data.images[0].classifiers[0].classes.map(manipulateTag)
         }
     }
 
