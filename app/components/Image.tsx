@@ -14,17 +14,19 @@ import services from '../constants/services.json'
 import Analysis from './Analysis'
 import WordCloud from './WordCloud'
 
-import getServiceConfigurations from '../utils/serviceConfigurations'
+import createQuery from '../utils/serviceConfigurations'
 import tagImage from '../utils/tagImage';
+import configuration from '../reducers/configuration';
+
+
 
 const { remote } = require('electron')
 
 const Image = (props) => {
 
     const [imgSource, setImgSource] = useState('')
-    const [result, setResult] = useState([])
-    const [pathListing, setPathListing] = useState([{ type: 'url', path: 'https://i.picsum.photos/id/256/200/200.jpg' }])
-    const [imageURL, setImageURL] = useState('https://i.picsum.photos/id/256/200/200.jpg')
+    const [pathListing, setPathListing] = useState([{ type: 'url', path: 'https://picsum.photos/id/256/200/200.jpg' }])
+    const [imageURL, setImageURL] = useState('https://picsum.photos/id/256/200/200.jpg')
     const [servicesToSend, setServicesToSend] = useState({})
 
     const [animation, setAnimation] = useState('')
@@ -56,10 +58,7 @@ const Image = (props) => {
         setJob(newJob)
     }
 
-    const sendImages = () => {
-        setResult([])
-        setAnimation('processing')
-
+    const displayImage = () => {
         // Display image. Currently just displays the first image.
         // Code will probably be used in the future to  display images in the list, maybe on mouseover of path?
         // Doesn't handle local image right now.
@@ -68,29 +67,30 @@ const Image = (props) => {
                 setImgSource('data:image/png;base64,' + pic)
             })
         }
+    }
 
-        // Get configurations for services (= found in props.configurations)
-        // Filter: only configurations selected by the user
-        const serviceConfigurations = getServiceConfigurations()
-            .map(service => {
-                const conf = props.configuration[service.getName()]
-                if (conf) {
-                    service.updateConfiguration(conf)
-                    return service
-                }
-            }).filter(serviceConfig => servicesToSend[serviceConfig.getName()])
+    const sendImages = () => {
 
-        const queries = serviceConfigurations.map(conf => {
-            return (pathListing.map(path => tagImage(conf, path)))
-        })
+        setAnimation('processing')
 
-        Promise.all(queries.flat()).then((values: Array<Tag>) => {
+
+        // Construct queries from configurations of selected services
+        const queriesBasedOnConf = Object.keys(servicesToSend)
+                            .filter(s => servicesToSend[s])
+                            .map(service => props.configuration[service])
+                            .map(configuration => pathListing.map(path => createQuery(configuration, path)))
+                            .flat()
+
+        const promises = queriesBasedOnConf.map(q => tagImage(q))
+    
+
+        Promise.all(promises).then((values: Array<Tag>) => {
 
             const result = values.flat() // values is a nested array: each service is it's own array
             setAnimation('')
 
             const sortedResult = result.sort((result1, result2) => (result1.accuracy > result2.accuracy) ? -1 : 1)
-            setResult(sortedResult)
+            
 
             handleJobChange(servicesToSend, sortedResult)
         })
@@ -103,6 +103,7 @@ const Image = (props) => {
         } else {
             if (window.confirm(`You are sending ${pathListing.length} images to${serviceArray}`)) {
                 sendImages()
+                displayImage()
             }
         }
     }
@@ -189,7 +190,7 @@ const Image = (props) => {
             <div>
                 <p>{animation}</p>
             </div>
-            <Results result={result} />
+            <Results job={job} />
             <br></br>
             <br></br>
             <Analysis job={job} animation={animation} />

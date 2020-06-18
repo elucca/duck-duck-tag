@@ -2,6 +2,10 @@ import React from 'react'
 
 const Analysis = ({ job, animation }) => {
 
+    if (!job) {
+        return null
+    }
+
     const result = job.result
 
     

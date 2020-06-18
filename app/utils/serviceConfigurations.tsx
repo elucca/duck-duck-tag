@@ -12,36 +12,29 @@ class ServiceConfiguration {
 
     imgPath: Path
 
-    constructor(configuration) {
+    constructor(configuration,path) {
         this.name = configuration.name
         this.API_URL_QUERY = configuration.API_URL_QUERY
         this.API_URL_BASE = configuration.API_URL_BASE
         this.API_ENDPOINT = configuration.API_ENDPOINT
         this.API_KEY = configuration.API_KEY
-        this.imgPath = { type: '', path: '' }
+        this.imgPath = path
     }
 
-    setImagePath = (imgPath: Path) => {
-        this.imgPath = imgPath
-    }
+  
 
     getName = () => {
         return this.name
     }
 
-    updateConfiguration = configuration => {
-        this.API_URL_QUERY = configuration.API_URL_QUERY
-        this.API_URL_BASE = configuration.API_URL_BASE
-        this.API_ENDPOINT = configuration.API_ENDPOINT
-        this.API_KEY = configuration.API_KEY
-    }
+   
 
 }
 
 class AzureConfig extends ServiceConfiguration {
 
-    constructor(configuration) {
-        super(configuration)
+    constructor(configuration,path) {
+        super(configuration,path)
     }
 
     getHeaders = () => {
@@ -62,11 +55,11 @@ class AzureConfig extends ServiceConfiguration {
         // TODO: If imgPath.type === 'localPath'        
     }
 
-    getHandleResponse = (imgPathCorrespondingToResponse : Path) => {
+    getHandleResponse = () => {
 
         const manipulateTag = (tag) => (
             {
-                imgPath: imgPathCorrespondingToResponse.path,
+                imgPath: this.imgPath,
                 service: this.name,
                 label: tag.name.toLowerCase(),
                 accuracy: tag.confidence
@@ -82,8 +75,8 @@ class AzureConfig extends ServiceConfiguration {
 
 class IBMconfig extends ServiceConfiguration {
 
-    constructor(configuration) {
-        super(configuration)
+    constructor(configuration,path) {
+        super(configuration,path)
     }
 
     getHeaders = () => {
@@ -104,11 +97,11 @@ class IBMconfig extends ServiceConfiguration {
         // TODO: If imgPath.type === 'localPath' 
     }
 
-    getHandleResponse = (imgPathCorrespondingToResponse : Path) => {
+    getHandleResponse = () => {
 
         const manipulateTag = (tag) => (
             {
-                imgPath: imgPathCorrespondingToResponse.path,
+                imgPath: this.imgPath,
                 service: this.name,
                 label: tag.class.toLowerCase(),
                 accuracy: tag.score
@@ -122,16 +115,22 @@ class IBMconfig extends ServiceConfiguration {
 
 }
 
-const getServiceConfigurations = () => {
+export const createQuery = (config,path) => {
 
-    const serviceConfigs = []
+    let query
 
-    serviceConfigs.push(new AzureConfig(services.find(serv => serv.name === 'Azure')))
-    serviceConfigs.push(new IBMconfig(services.find(serv => serv.name === 'IBM')))
+    if (config.name === 'Azure') {
+        query = new AzureConfig( config, path )
+    }
 
-    return (serviceConfigs)
-}
+    if (config.name === 'IBM') {
+        query = new IBMconfig( config, path )
+    }
+
+    return query
+} 
 
 
-export default getServiceConfigurations
+
+export default createQuery
 

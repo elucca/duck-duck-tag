@@ -4,6 +4,10 @@ import styles from './WordCloud.css'
 
 const WordCloud = ({ job, animation }) => {
 
+    if (!job) {
+        return null
+    }
+
     const services = job.services
     const result = job.result
 

@@ -2,15 +2,18 @@ import React from 'react'
 import Tag from './Tag.ts'
 
 
-const Results = ({ result }) => {
+const Results = ({ job }) => {
+    
 
 
-    if (!result) {
-        return ''
+    if (!job) {
+        return null
     }
 
+    const result = job.result
+
     if (result.length === 0) {
-        return ''
+        return null
     }
 
     return (
