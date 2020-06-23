@@ -1,6 +1,7 @@
 
 import axios from 'axios'
 import Path from '../components/Path'
+import getFile from './getFile'
 
 class ServiceConfiguration {
 
@@ -92,25 +93,36 @@ class IBMconfig extends ServiceConfiguration {
     }
 
     getBody = () => {
-        return {}
+            if (this.imgPath.type === 'localPath') {
+                const file = getFile(this.imgPath.path)
+                return {
+                    file
+                }
+            }
+
+            if (this.imgPath.type === 'url') {
+                return {}
+            }
     }
 
 
     getParams = () => {
-        return {
-            version: "2018-03-19",
-            url: this.imgPath.path
-            //images_file: getFile(this.imgPath.path)
+        if (this.imgPath.type === 'url') {
+            return {
+                url: this.imgPath.path
+            }
+        }
+
+        if (this.imgPath.type === 'localPath') {
+            return {}
         }
     }
 
 
     getURL = () => {
-        if (this.imgPath.type === 'url') {
+        if (this.imgPath.type === 'url' || this.imgPath.type === 'localPath') {
             return (this.API_ENDPOINT.match(/^http/) ? '' : this.API_URL_BASE) + this.API_ENDPOINT + this.API_URL_QUERY
-            // + this.imgPath.path
         }
-        // TODO: If imgPath.type === 'localPath' 
     }
 
     getHandleResponse = () => {
