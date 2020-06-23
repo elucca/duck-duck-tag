@@ -168,7 +168,7 @@ const Image = (props) => {
                             return (
                                 <div key={service.name}>
                                     <label >{service.name}</label>
-                                    <input name='isSelected' type='checkbox' onChange={() => handleSelection(service.name)} />
+                                    <input class='isSelected' type='checkbox' onChange={() => handleSelection(service.name)} />
                                 </div>
                             )
                         })
