@@ -25,7 +25,10 @@ const { remote } = require('electron')
 const Image = (props) => {
 
     const [imgSource, setImgSource] = useState('')
-    const [pathListing, setPathListing] = useState([{ type: 'url', path: 'https://picsum.photos/id/256/200/200.jpg' }])
+    const [pathListing, setPathListing] = useState([
+        //{ type: 'url', path: 'https://picsum.photos/id/256/200/200.jpg' }
+        { type: 'localPath', path: '' }
+    ])
     const [imageURL, setImageURL] = useState('https://picsum.photos/id/256/200/200.jpg')
     const [servicesToSend, setServicesToSend] = useState({})
 
