@@ -22,13 +22,10 @@ class ServiceConfiguration {
         this.imgPath = path
     }
 
-  
-
     getName = () => {
         return this.name
     }
 
-   
 
 }
 

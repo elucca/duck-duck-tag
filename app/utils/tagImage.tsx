@@ -2,8 +2,7 @@ import axios from 'axios'
 import ServiceConfiguration from './ServiceConfiguration'
 import Path from '../components/Path'
 import getFile from './getFile'
-//import FormData from 'form-data'
-const FormData = require('form-data')
+import * as FormData from 'form-data'
 
 const tagImage = (serviceConfiguration: ServiceConfiguration) => {
 
@@ -19,15 +18,15 @@ const tagImage = (serviceConfiguration: ServiceConfiguration) => {
 
 
     const bodyFormData = new FormData()
+    
     const image = getFile("fruitbowl.jpg")
 
-    bodyFormData.append('images_file', image)
+    bodyFormData.append('hedelmämalja', image)          // [object Object]
+    console.log('otsikkomme',bodyFormData.getHeaders)   // undefined
 
-
-    console.log("bodyform data", bodyFormData)
-
-
-    console.log("boundary", bodyFormData._boundary)
+    //bodyFormData.append('images_file', new Blob(image, {type: 'image/jpeg'}), 'fruitbowl.jpg') // We needs the third argument
+    
+    console.log("bodyform data", bodyFormData) // FormData {}
 
     const IBMconfig = {
         headers: {
@@ -38,7 +37,6 @@ const tagImage = (serviceConfiguration: ServiceConfiguration) => {
     }
 
     //console.log("bodyformdata headers", bodyFormData.getHeaders())
-
 
     return axios.post(URL, bodyFormData, IBMconfig
         
