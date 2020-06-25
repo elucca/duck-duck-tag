@@ -6,7 +6,7 @@
     },
     { 
         "name": "IBM"
-        , "API_URL_QUERY": "/v3/classify"
+        , "API_URL_QUERY": "/v3/classify?version=2018-03-19"
         , "API_URL_BASE": "https://api.eu-de.visual-recognition.watson.cloud.ibm.com/instances/"
         , "API_ENDPOINT": "http://localhost:3001/tag/ibm"
     }

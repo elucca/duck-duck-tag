@@ -1,6 +1,7 @@
 
 import axios from 'axios'
 import Path from '../components/Path'
+import getFile from './getFile'
 
 class ServiceConfiguration {
 
@@ -21,13 +22,10 @@ class ServiceConfiguration {
         this.imgPath = path
     }
 
-  
-
     getName = () => {
         return this.name
     }
 
-   
 
 }
 
@@ -39,8 +37,8 @@ class AzureConfig extends ServiceConfiguration {
 
     getHeaders = () => {
         return {
-            'Ocp-Apim-Subscription-Key': this.API_KEY,
-            'Content-Type': 'application/json'
+                'Ocp-Apim-Subscription-Key': this.API_KEY,
+                'Content-Type': this.imgPath.type === 'url'  ?  'application/json' : 'application/octet-stream'
         }
     }
 
@@ -57,7 +55,11 @@ class AzureConfig extends ServiceConfiguration {
         if (this.imgPath.type === 'url') {
             return { "url": this.imgPath.path }
         }
-        // TODO: If imgPath.type === 'localPath'        
+        if (this.imgPath.type === 'localPath') {
+            const file = getFile(this.imgPath.path)
+            return file
+        }
+   
     }
 
     getHandleResponse = () => {
@@ -86,31 +88,43 @@ class IBMconfig extends ServiceConfiguration {
 
     getHeaders = () => {
         const apikey = btoa(`apikey:${this.API_KEY}`)
-        const header = axios.defaults.headers.common['Authorization'] = `Basic ${apikey}`
 
-        return { header }
+        return {
+                'Authorization': `Basic ${apikey}`,
+                'Content-Type': this.imgPath.type === 'url' ? 'application/json' : 'application/octet-stream' 
+            
+        }
     }
 
     getBody = () => {
-        return {}
+            if (this.imgPath.type === 'localPath') {
+                const file = getFile(this.imgPath.path)
+                return file
+            }
+
+            if (this.imgPath.type === 'url') {
+                return {}
+            }
     }
 
 
     getParams = () => {
-        return {
-            version: "2018-03-19",
-            url: this.imgPath.path
-            //images_file: getFile(this.imgPath.path)
+        if (this.imgPath.type === 'url') {
+            return {
+                url: this.imgPath.path
+            }
+        }
+
+        if (this.imgPath.type === 'localPath') {
+            return {}
         }
     }
 
 
     getURL = () => {
-        if (this.imgPath.type === 'url') {
+        if (this.imgPath.type === 'url' || this.imgPath.type === 'localPath') {
             return (this.API_ENDPOINT.match(/^http/) ? '' : this.API_URL_BASE) + this.API_ENDPOINT + this.API_URL_QUERY
-            // + this.imgPath.path
         }
-        // TODO: If imgPath.type === 'localPath' 
     }
 
     getHandleResponse = () => {

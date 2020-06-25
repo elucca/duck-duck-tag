@@ -17,6 +17,7 @@ import WordCloud from './WordCloud'
 import createQuery from '../utils/serviceConfigurations'
 import tagImage from '../utils/tagImage';
 import configuration from '../reducers/configuration';
+import getFile from '../utils/getFile';
 
 
 
@@ -41,7 +42,10 @@ const Listing = ({pathListing}) => {
 const Image = (props) => {
 
     const [imgSource, setImgSource] = useState('')
-    const [pathListing, setPathListing] = useState([{ type: 'url', path: 'https://picsum.photos/id/256/200/200.jpg' }])
+    const [pathListing, setPathListing] = useState([
+        { type: 'url', path: 'https://picsum.photos/id/256/200/200.jpg' }
+        //{ type: 'localPath', path: 'jalka.jpg' }
+    ])
     const [imageURL, setImageURL] = useState('https://picsum.photos/id/256/200/200.jpg')
     const [servicesToSend, setServicesToSend] = useState({})
 
@@ -82,6 +86,13 @@ const Image = (props) => {
             getUrlAsBase64(pathListing[0].path).then((pic: string) => {
                 setImgSource('data:image/png;base64,' + pic)
             })
+        }
+
+        //display local image
+        if (pathListing[0].type === 'localPath') {
+            const file = getFile(pathListing[0].path)
+
+            setImgSource('data:image/jpg;base64,' + Buffer.from(file, 'binary').toString('base64'))
         }
     }
 

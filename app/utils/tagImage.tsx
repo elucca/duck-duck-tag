@@ -11,10 +11,7 @@ const tagImage = (serviceConfiguration: ServiceConfiguration) => {
     const params            = serviceConfiguration.getParams()
 
 
-    return axios.post(URL, body ,{ headers: headers, params: params, paramsSerializer: (params) => {
-
-                const keys = Object.keys(params)
-                
+    return axios.post(URL, body, { headers, params: params, paramsSerializer: (params) => {
                 
                 let result = '';
                 Object.keys(params).forEach(key => {
