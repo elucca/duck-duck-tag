@@ -184,7 +184,7 @@ const Image = (props) => {
             <h5>URL for image to tag:</h5>
             <input value={imageURL} onChange={handleURLchange} type='text' ></input>
             <button className={styles.button} id="url" onClick={handleClickURL}>Add image URL</button>
-            <button className={styles.button} id="url" onClick={handleClickLocal}>Add local images (Not fully implemented)</button>
+            <button className={styles.button} id="url" onClick={handleClickLocal}>Add local images</button>
             <br></br>
             <div>
                 <form>
