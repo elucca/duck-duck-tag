@@ -37,8 +37,10 @@ class AzureConfig extends ServiceConfiguration {
 
     getHeaders = () => {
         return {
-            'Ocp-Apim-Subscription-Key': this.API_KEY,
-            'Content-Type': 'application/json'
+            headers: {
+                'Ocp-Apim-Subscription-Key': this.API_KEY,
+                'Content-Type': this.imgPath.type === 'url'  ?  'application/json' : 'application/octet-stream'
+            }
         }
     }
 
@@ -55,7 +57,11 @@ class AzureConfig extends ServiceConfiguration {
         if (this.imgPath.type === 'url') {
             return { "url": this.imgPath.path }
         }
-        // TODO: If imgPath.type === 'localPath'        
+        if (this.imgPath.type === 'localPath') {
+            const file = getFile(this.imgPath.path)
+            return file
+        }
+   
     }
 
     getHandleResponse = () => {
@@ -84,17 +90,19 @@ class IBMconfig extends ServiceConfiguration {
 
     getHeaders = () => {
         const apikey = btoa(`apikey:${this.API_KEY}`)
-        const header = axios.defaults.headers.common['Authorization'] = `Basic ${apikey}`
 
-        return { header }
+        return {
+            headers: {
+                'Authorization': `Basic ${apikey}`,
+                'Content-Type': this.imgPath.type === 'url' ? 'application/json' : 'application/octet-stream' 
+            }
+        }
     }
 
     getBody = () => {
             if (this.imgPath.type === 'localPath') {
                 const file = getFile(this.imgPath.path)
-                return {
-                    file
-                }
+                return file
             }
 
             if (this.imgPath.type === 'url') {
