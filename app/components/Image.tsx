@@ -22,6 +22,22 @@ import configuration from '../reducers/configuration';
 
 const { remote } = require('electron')
 
+const Listing = ({pathListing}) => {
+    const matti = () => {
+        console.log('olen matti')
+    }
+    return (
+        <div>
+            <ul id='listed-urls'>
+                    {pathListing.map((path, index) => <li key={index}>
+                            <input type='checkbox' onChange={matti}></input>
+                            {path.path}
+                    </li>)}
+            </ul>
+        </div>
+    )
+}
+
 const Image = (props) => {
 
     const [imgSource, setImgSource] = useState('')
@@ -153,9 +169,7 @@ const Image = (props) => {
                     <i className="fa fa-arrow-left fa-3x" />
                 </Link>
             </div>
-            <ul id='listed-urls'>
-                {pathListing.map((path, index) => <li key={index}>{path.path}</li>)}
-            </ul>
+            <Listing pathListing={pathListing}/>
             <h5>URL for image to tag:</h5>
             <input value={imageURL} onChange={handleURLchange} type='text' ></input>
             <button className={styles.button} id="url" onClick={handleClickURL}>Add image URL</button>
@@ -168,7 +182,7 @@ const Image = (props) => {
                             return (
                                 <div key={service.name}>
                                     <label >{service.name}</label>
-                                    <input class='isSelected' type='checkbox' onChange={() => handleSelection(service.name)} />
+                                    <input className='isSelected' type='checkbox' onChange={() => handleSelection(service.name)} />
                                 </div>
                             )
                         })
