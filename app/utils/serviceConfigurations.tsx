@@ -111,12 +111,15 @@ class IBMconfig extends ServiceConfiguration {
     getParams = () => {
         if (this.imgPath.type === 'url') {
             return {
-                url: this.imgPath.path
+                url: this.imgPath.path,
+                threshold: '0.0'
             }
         }
 
         if (this.imgPath.type === 'localPath') {
-            return {}
+            return {
+                threshold: '0.0'
+            }
         }
     }
 
