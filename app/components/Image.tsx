@@ -18,6 +18,7 @@ import createQuery from '../utils/serviceConfigurations'
 import tagImage from '../utils/tagImage';
 import configuration from '../reducers/configuration';
 import getFile from '../utils/getFile';
+import conjureId from '../utils/assignId'
 
 
 
@@ -173,8 +174,8 @@ const Image = (props) => {
         setServicesToSend(changedService)
     }
 
-    const handleDelete = (some: string) => {
-        const deletedPath = pathListing.filter(p => p.path !== some)
+    const handleDelete = (path: string) => {
+        const deletedPath = pathListing.filter(p => p.path !== path)
         setPathListing(deletedPath)
     }
 
