@@ -3,6 +3,7 @@ declare const styles: {
   readonly "deleteButton": string;
   readonly "imageContainer": string;
   readonly "tagListContainer": string;
+  readonly "listedURLS": string;
 };
 export = styles;
 

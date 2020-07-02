@@ -20,7 +20,7 @@ import configuration from '../reducers/configuration';
 import getFile from '../utils/getFile';
 import conjureId from '../utils/assignId'
 
-
+import { Table } from 'react-bootstrap'
 
 const { remote } = require('electron')
 
@@ -30,13 +30,32 @@ const Listing = ({pathListing, handleDelete}) => {
     }
     return (
         <div>
-            <ul id='listed-urls'>
-                    {pathListing.map((path, index) => <li key={index}>
-                            <input type='checkbox' onChange={matti}></input>
-                            {path.path}
-                            <button className={styles.deleteButton} id="delete" onClick={() => handleDelete(path.path)}>Delete</button>
-                    </li>)}
-            </ul>
+            <Table striped className={styles.listedURLS}>
+                <thead>
+                    <tr>
+                        <th>Send to service</th>
+                        <th>Path/url</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                    pathListing.map((path, index) => 
+                            {
+                            return(
+                                <tr key={index}>
+                                    <td><input type='checkbox' onChange={matti}></input></td>
+                                    <td>{path.path}</td>
+                                    <td>
+                                        <button className={styles.deleteButton} id="delete" onClick={() => handleDelete(path.path)}><span>🗑</span></button>
+                                    </td>
+                                </tr>
+                            )
+                            }
+                        )
+                    }
+                </tbody>
+            </Table>
         </div>
     )
 }

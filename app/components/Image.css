@@ -1,4 +1,4 @@
-.button {
+.button, .deleteButton {
     background-color: #555555;
     border: none;
     color: white;
@@ -11,14 +11,14 @@
   }
 .deleteButton {
   background-color: red;
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
   border-radius: 8px;
+  width: 6em;
+  height: 2em;
+  vertical-align: middle;
+}
+
+.deleteButton {
+  padding: 0;
 }
 
 img {
@@ -28,7 +28,7 @@ img {
 }
 
 input {
-  width: 50%;
+ 
   padding: 12px 20px;
   margin: 8px 0;
   box-sizing: border-box;
@@ -53,3 +53,26 @@ h5 {
 button {
   margin: 5px
 }
+
+
+.listedURLS {
+ 
+  width: 70%;
+}
+
+
+.listedURLS th {
+  background-color: darkblue;
+  text-align:center; 
+}
+
+.listedURLS  td:nth-child(1)  {
+  width: 9em;
+}
+
+.listedURLS  td:nth-child(3)  {
+  width: 7em;
+
+}
+
+
