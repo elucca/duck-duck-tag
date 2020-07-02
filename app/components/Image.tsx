@@ -23,7 +23,7 @@ import getFile from '../utils/getFile';
 
 const { remote } = require('electron')
 
-const Listing = ({pathListing}) => {
+const Listing = ({pathListing, handleDelete}) => {
     const matti = () => {
         console.log('olen matti')
     }
@@ -33,6 +33,7 @@ const Listing = ({pathListing}) => {
                     {pathListing.map((path, index) => <li key={index}>
                             <input type='checkbox' onChange={matti}></input>
                             {path.path}
+                            <button className={styles.deleteButton} id="delete" onClick={() => handleDelete(path.path)}>Delete</button>
                     </li>)}
             </ul>
         </div>
@@ -172,6 +173,11 @@ const Image = (props) => {
         setServicesToSend(changedService)
     }
 
+    const handleDelete = (some: string) => {
+        const deletedPath = pathListing.filter(p => p.path !== some)
+        setPathListing(deletedPath)
+    }
+
     // This could stand to be refactored into separate components
     return (
         <div>
@@ -180,7 +186,7 @@ const Image = (props) => {
                     <i className="fa fa-arrow-left fa-3x" />
                 </Link>
             </div>
-            <Listing pathListing={pathListing}/>
+            <Listing pathListing={pathListing} handleDelete={handleDelete}/>
             <h5>URL for image to tag:</h5>
             <input value={imageURL} onChange={handleURLchange} type='text' ></input>
             <button className={styles.button} id="url" onClick={handleClickURL}>Add image URL</button>
