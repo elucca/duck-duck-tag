@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+import styles from './Image.css';
 import { Modal, Button } from 'react-bootstrap'
 
 import exportResults from '../utils/exportResults'
@@ -30,7 +31,7 @@ const Export = ({ job })  => {
 
     return(
         <div>
-            <Button  onClick={handleClickExport}>Export tags</Button>
+            <button className={styles.button} onClick={handleClickExport}>Export tags</button>
                 
             <Modal show={showExportChoice} onHide={handleClose}>
                 <Modal.Header closeButton>
@@ -39,7 +40,7 @@ const Export = ({ job })  => {
                 <Modal.Body>
                     
                         {
-                            exportFormats.map(format =>  <Button variant="primary" onClick={() => chooseFormatAndExport(format) }>{ format }</Button>)
+                            exportFormats.map(format =>  <Button variant="primary" key={format} onClick={() => chooseFormatAndExport(format) }>{ format }</Button>)
                         }
                   
                 </Modal.Body>
