@@ -15,10 +15,12 @@ const writeRowsToFile = (rows: Array<string>) => {
     stream.end()
 }
 
-const exportResults = (job) => {
+const exportResults = (job, exportOptions) => {
     const rows = job.result.map(makeRow)
 
-    writeRowsToFile(rows)
+    console.log('exporting to', exportOptions) 
+
+    //writeRowsToFile(rows)
 }
 
 
