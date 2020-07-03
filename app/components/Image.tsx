@@ -22,7 +22,7 @@ import conjureId from '../utils/assignId'
 
 import { Table } from 'react-bootstrap'
 
-const { remote } = require('electron')
+import { remote } from 'electron'
 
 const Listing = ({pathListing, handleDelete}) => {
     const matti = () => {
@@ -176,7 +176,7 @@ const Image = (props) => {
                 { name: 'Images', extensions: ['jpg', 'png', 'gif'] },
             ]
         }).then(result => {
-            let paths = result.filePaths.map(filePath => {
+            const paths = result.filePaths.map(filePath => {
                 return {type: 'localPath', path: filePath}
             })
             setPathListing(pathListing.concat(paths))

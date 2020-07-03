@@ -3,7 +3,7 @@ import Path from '../components/Path'
 
 export default interface ServiceConfiguration {
 
-    setImagePath(imgPath : Path): void;
+    setImagePath(imgPath: Path): void;
     getName(): string;
     updateConfiguration(configuration: {}): void;
     getHeaders(): object;
