@@ -8,7 +8,9 @@ const writeResultsToSQLite = arg => {
 
     const insertIntoResultTable = (db,record) => {
 
-        const values = [record.service, record.label, record.accuracy, record.imgPath.type, record.imgPath.path]
+
+        const currentTime = new Date().toISOString().split('T').join(' ')
+        const values = [record.service, record.label, record.accuracy, record.imgPath.type, record.imgPath.path, currentTime]
 
 
         // Horrible way to construct e.g INSERT INTO .... VALUES (?,?,?,?) 
@@ -29,7 +31,7 @@ const writeResultsToSQLite = arg => {
     
     db.serialize(() => {
 
-        db.run('CREATE TABLE IF NOT EXISTS result(service text, label text, accuracy real, type text, path text)');
+        db.run('CREATE TABLE IF NOT EXISTS result(service text, label text, accuracy real, type text, path text, insertTS text)');
     
         result.forEach((record) => insertIntoResultTable(db,record))
         
