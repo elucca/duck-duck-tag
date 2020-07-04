@@ -47,6 +47,6 @@ test('tag images', async t => {
         .click(Selector('button').withExactText('Analyze images'))  // Click Analyze
         .expect(Selector('td').withText('Azure').count).gte(1)      // Azure mentioned in a table cell at least once
         .expect(Selector('td').withText('IBM').count).gte(1)        // IBM mentioned in a table cell at least once
-        .expect(Selector('table').count).eql(2)                     // We expect to see two tables: one for tags and one for analysis
+        .expect(Selector('table').count).eql(3)                     // We expect to see three tables: one for imagepaths, one for tags and one for analysis
         
 })
