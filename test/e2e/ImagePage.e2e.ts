@@ -9,6 +9,16 @@ const assertNoConsoleErrors = async t => {
   };
 
 
+const chooseAllServices = async t => {
+  const serviceSelectors = Selector('.isSelected');
+  const count    = await serviceSelectors.count;
+
+  // Choose all services that are available
+  for (let i = 0; i < count; i++) {
+      await t.click(serviceSelectors.nth(i));
+  }
+}
+
 // Create mock
 
 const mockServiceAzureURL = new RegExp('localhost.+azure')
@@ -35,13 +45,8 @@ fixture`Analyze image tests`
 
 test('tag images', async t => {
 
-  const serviceSelectors = Selector('.isSelected');
-  const count    = await serviceSelectors.count;
+  await chooseAllServices(t)
 
-  // Choose all services that are available
-  for (let i = 0; i < count; i++) {
-      await t.click(serviceSelectors.nth(i));
-  }
   await t
         .setNativeDialogHandler(() => true)                         // Return true for (any) confirmation
         .click(Selector('button').withExactText('Analyze images'))  // Click Analyze
@@ -50,3 +55,33 @@ test('tag images', async t => {
         .expect(Selector('table').count).eql(3)                     // We expect to see three tables: one for imagepaths, one for tags and one for analysis
         
 })
+
+
+
+
+
+fixture`Export tests`
+  .page('../../app/app.html')
+  .requestHooks(mock)
+  .beforeEach(clickToAnalyzeImagesLink)
+  .afterEach(assertNoConsoleErrors);    // Test that no errors appear in console
+
+
+const testExportToFormat = format => {
+
+  test('Export to '+format, async t => {
+
+    
+    await chooseAllServices(t)
+
+    await t
+          .setNativeDialogHandler(() => true)                             // Return true for (any) confirmation
+          .click(Selector('button').withExactText('Analyze images'))      // Click Analyze
+          .click(Selector('button').withExactText('Export tags'))         // Click Export tags
+          .click(Selector('button').withExactText(format))                // Choose format as format to export to
+          .expect(Selector('button').withExactText(format).count).eql(0)  // After choosing the format, button should disappear
+          
+  })
+}
+
+['CSV','JSON','SQLite'].forEach(testExportToFormat)
