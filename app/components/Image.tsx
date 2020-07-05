@@ -170,9 +170,11 @@ const Image = (props) => {
         setImageURL('')
     }
 
-    const handleClickLocal = () => {
-        console.log(getPathsFromTxt("testi.txt"))
+    const handleClickURLsFromFile = () => {
+        //setPathListing(pathListing.concat({ type: 'url', path: }))
+    }
 
+    const handleClickLocal = () => {
         remote.dialog.showOpenDialog({
             properties: ['openFile', 'multiSelections'],
             filters: [
@@ -213,6 +215,7 @@ const Image = (props) => {
             <h5>URL for image to tag:</h5>
             <input value={imageURL} onChange={handleURLchange} type='text' ></input>
             <button className={styles.button} id="url" onClick={handleClickURL}>Add image URL</button>
+            <button className={styles.button} id="url" onClick={handleClickURLsFromFile}>Add URLs from file</button>
             <button className={styles.button} id="url" onClick={handleClickLocal}>Add local images</button>
             <br></br>
             <div>
