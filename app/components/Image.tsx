@@ -171,7 +171,19 @@ const Image = (props) => {
     }
 
     const handleClickURLsFromFile = () => {
-        //setPathListing(pathListing.concat({ type: 'url', path: }))
+        remote.dialog.showOpenDialog({
+            properties: ['openFile'],
+            filters: [
+                { name: 'Text', extensions: ['txt'] },
+            ]
+        }).then(result => {
+            const paths = getPathsFromTxt(result.filePaths[0]).map(url => {
+                return {type: 'url', path: url}
+            })
+            setPathListing(pathListing.concat(paths))
+        }).catch(err => {
+            console.log(err)
+        })
     }
 
     const handleClickLocal = () => {
