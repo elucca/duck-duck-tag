@@ -7,8 +7,9 @@ import routes from '../constants/routes.json';
 import Results from './Results'
 
 import getUrlAsBase64 from '../utils/getUrlAsBase64'
-
 import exportResults from '../utils/exportResults'
+import getPathsFromTxt from '../utils/getPathsFromTxt'
+
 import Tag from './Tag'
 import services from '../constants/services.json'
 import Analysis from './Analysis'
@@ -170,6 +171,8 @@ const Image = (props) => {
     }
 
     const handleClickLocal = () => {
+        console.log(getPathsFromTxt("testi.txt"))
+
         remote.dialog.showOpenDialog({
             properties: ['openFile', 'multiSelections'],
             filters: [
