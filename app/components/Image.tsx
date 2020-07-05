@@ -33,9 +33,9 @@ const Listing = ({pathListing, handleDelete}) => {
             <Table striped className={styles.listedURLS}>
                 <thead>
                     <tr>
-                        <th>Send to service</th>
-                        <th>Path/url</th>
-                        <th>Delete</th>
+                        <th className="text-light">Send to service</th>
+                        <th className="text-light">Path/url</th>
+                        <th className="text-light">Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -45,7 +45,7 @@ const Listing = ({pathListing, handleDelete}) => {
                             return(
                                 <tr key={index}>
                                     <td><input type='checkbox' onChange={matti}></input></td>
-                                    <td>{path.path}</td>
+                                    <td className="text-light">{path.path}</td>
                                     <td>
                                         <button className={styles.deleteButton} id="delete" onClick={() => handleDelete(path.path)}><span>🗑</span></button>
                                     </td>
