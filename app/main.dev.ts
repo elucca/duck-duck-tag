@@ -9,10 +9,12 @@
  * `./app/main.prod.js` using webpack. This gives us some performance wins.
  */
 import path from 'path';
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import MenuBuilder from './menu';
+
+import writeResultsToSQLite from './utils/writeResultsToSQLite'
 
 /* eslint  @typescript-eslint/no-var-requires: 0 */  
 
@@ -122,4 +124,14 @@ app.on('activate', () => {
 
   
   if (mainWindow === null) createWindow();
+});
+
+
+
+
+// Listener for request to export dat to sqlite
+ipcMain.on('request-write-to-sqlite', (event, arg) => {
+  
+    
+    writeResultsToSQLite(arg)
 });

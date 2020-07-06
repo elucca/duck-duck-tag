@@ -2,8 +2,9 @@ node_modules
 .env
 release
 app/dist/*
+app/Release
 app/main.prod.js
-export.csv
+export.*
 .eslintcache
 dll/
 yarn-error.log
