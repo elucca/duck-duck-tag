@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+
 import styles from './Image.css';
 import routes from '../constants/routes.json';
 
 import Results from './Results'
 
 import getUrlAsBase64 from '../utils/getUrlAsBase64'
-import exportResults from '../utils/exportResults'
 import getPathsFromTxt from '../utils/getPathsFromTxt'
 
 import Tag from './Tag'
 import services from '../constants/services.json'
 import Analysis from './Analysis'
+import Export from './Export'
 import WordCloud from './WordCloud'
 
 import createQuery from '../utils/serviceConfigurations'
@@ -21,7 +22,7 @@ import configuration from '../reducers/configuration';
 import getFile from '../utils/getFile';
 import conjureId from '../utils/assignId'
 
-import { Table } from 'react-bootstrap'
+import { Table, Modal, Button } from 'react-bootstrap'
 
 import { remote } from 'electron'
 
@@ -64,6 +65,7 @@ const Listing = ({pathListing, handleDelete}) => {
 const Image = (props) => {
 
     const [imgSource, setImgSource] = useState('')
+    
     const [pathListing, setPathListing] = useState([
         { type: 'url', path: 'https://picsum.photos/id/256/200/200.jpg' }
         //{ type: 'localPath', path: 'jalka.jpg' }
@@ -158,9 +160,7 @@ const Image = (props) => {
         }
     }
 
-    const handleClickExport = () => {
-        exportResults(job)
-    }
+   
     const handleURLchange = (e: Event) => {
         setImageURL(e.target.value)
     }
@@ -246,11 +246,11 @@ const Image = (props) => {
             </div>
             <br></br>
             <br></br>
-
+            <Export job={job}></Export>
             <button className={styles.button} id="analyze-button" onClick={handleAnalyzeClick}>Analyze images</button>
 
             <br></br>
-            <button className={styles.button} id="export" onClick={handleClickExport}>Export tags</button>
+            
             <br></br>
             <div className={styles.imageContainer}>
                 {

@@ -35,10 +35,17 @@ export default merge.smart(baseConfig, {
           new TerserPlugin({
             parallel: true,
             sourceMap: true,
-            cache: true
+            cache: true,
+            terserOptions: {
+              compress: {
+                  reduce_vars: false
+              }
+            }
           })
         ]
   },
+
+
 
   plugins: [
     new BundleAnalyzerPlugin({

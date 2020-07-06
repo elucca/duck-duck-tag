@@ -1,0 +1,45 @@
+const Database = require('better-sqlite3');
+
+
+const writeResultsToSQLite = arg => {
+
+    const filename  = arg.filename
+    const result    = arg.result
+
+    const insertIntoResultTable = (db,record) => {
+
+
+        const currentTime = new Date().toISOString().split('T').join(' ')
+        const values = [record.service, record.label, record.accuracy, record.imgPath.type, record.imgPath.path, currentTime]
+
+
+        // Horrible way to construct e.g INSERT INTO .... VALUES (?,?,?,?) 
+        const statement = db.prepare(`INSERT INTO result VALUES ` + '(' +values.map((v) => '?').join(',') + ')')
+
+        return statement.run(values)
+
+    }
+
+
+
+    const db = new Database(filename, { verbose: console.log })
+
+    // Create table if it does not exist
+    const createStmt = db.prepare('CREATE TABLE IF NOT EXISTS result(service text, label text, accuracy real, type text, path text, insertTS text)')
+    createStmt.run()
+
+
+    
+    const infos = result.map((record) => insertIntoResultTable(db,record))
+
+    const numberOfInsertedRows = infos.reduce((p,c) => p + c.changes,0 )
+        
+    console.log('Inserted ',numberOfInsertedRows,' rows')
+
+    db.close()
+
+    return numberOfInsertedRows
+
+}
+
+export default writeResultsToSQLite
