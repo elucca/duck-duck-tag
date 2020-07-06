@@ -1,6 +1,6 @@
 
 import fs  from 'fs'
-const { ipcRenderer } = require('electron');
+import { ipcRenderer } from 'electron'
 
 const sendResultsToMainForWritingToSQLite = (result,filename) => {
 
