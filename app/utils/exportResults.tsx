@@ -2,7 +2,7 @@
 import fs  from 'fs'
 const { ipcRenderer } = require('electron');
 
-const writeResultsToSQLite = (result,filename) => {
+const sendResultsToMainForWritingToSQLite = (result,filename) => {
 
         // Data to send to main process
         const data = {
@@ -48,7 +48,7 @@ const exportResults = (job, formatToExportTo: string) => {
 
     if (formatToExportTo === 'SQLite') {
 
-        writeResultsToSQLite(job.result,filename)
+        sendResultsToMainForWritingToSQLite(job.result,filename)
 
         return
 
