@@ -21,6 +21,7 @@ import tagImage from '../utils/tagImage';
 import configuration from '../reducers/configuration';
 import getFile from '../utils/getFile';
 import conjureId from '../utils/assignId'
+import getId from '../utils/getId'
 
 import { Table, Modal, Button } from 'react-bootstrap'
 
@@ -66,7 +67,7 @@ const Image = (props) => {
     const [imgSource, setImgSource] = useState('')
     
     const [pathListing, setPathListing] = useState([
-        { type: 'url', path: 'https://picsum.photos/id/256/200/200.jpg', selected: true }
+        { type: 'url', path: 'https://picsum.photos/id/256/200/200.jpg', selected: true, id: getId() }
         //{ type: 'localPath', path: 'jalka.jpg' }
     ])
     const [imageURL, setImageURL] = useState('https://picsum.photos/id/256/200/200.jpg')
@@ -121,8 +122,6 @@ const Image = (props) => {
     const sendImages = () => {
 
         setAnimation('processing')
-
-
         // Construct queries from configurations of selected services
         const queriesBasedOnConf = Object.keys(servicesToSend)
                             .filter(s => servicesToSend[s])
@@ -149,6 +148,8 @@ const Image = (props) => {
     }
 
     const handleAnalyzeClick = () => {
+        console.log(pathListing)
+
         const serviceArray = Object.keys(servicesToSend).filter(s => servicesToSend[s]).map(s => ` ${s}`)
         if (serviceArray.length < 1) {
             alert("Add at least one service")
@@ -157,6 +158,7 @@ const Image = (props) => {
             alert("Add at least one image")
         } else {
             if (window.confirm(`You are sending ${pathListing.filter(path => path.selected).length} images to${serviceArray}`)) {
+
                 sendImages()
                 displayImage()
             }
@@ -169,7 +171,7 @@ const Image = (props) => {
     }
 
     const handleClickURL = () => {
-        setPathListing(pathListing.concat({ type: 'url', path: imageURL, selected: true}))
+        setPathListing(pathListing.concat({ type: 'url', path: imageURL, selected: true, id: getId()}))
         setImageURL('')
     }
 
@@ -181,7 +183,7 @@ const Image = (props) => {
             ]
         }).then(result => {
             const paths = getPathsFromTxt(result.filePaths[0]).map(url => {
-                return {type: 'url', path: url}
+                return {type: 'url', path: url, selected: true, id: getId()}
             })
             setPathListing(pathListing.concat(paths))
         }).catch(err => {
@@ -197,7 +199,7 @@ const Image = (props) => {
             ]
         }).then(result => {
             const paths = result.filePaths.map(filePath => {
-                return {type: 'localPath', path: filePath, selected: true}
+                return {type: 'localPath', path: filePath, selected: true, id: getId()}
             })
             setPathListing(pathListing.concat(paths))
         }).catch(err => {
