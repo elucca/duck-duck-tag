@@ -27,9 +27,7 @@ import { Table, Modal, Button } from 'react-bootstrap'
 import { remote } from 'electron'
 
 const Listing = ({pathListing, handleDelete}) => {
-    const matti = () => {
-        console.log('olen matti')
-    }
+
     return (
         <div>
             <Table striped className={styles.listedURLS}>
@@ -42,11 +40,12 @@ const Listing = ({pathListing, handleDelete}) => {
                 </thead>
                 <tbody>
                     {
-                    pathListing.map((path, index) => 
+                    pathListing.map((path) => 
                             {
                             return(
-                                <tr key={index}>
-                                    <td><input type='checkbox' onChange={matti}></input></td>
+                                // TODO: add id to key and handleDelete
+                                <tr key={path.path}>
+                                    <td><input type='checkbox' defaultChecked onChange={() => path.selected = !path.selected}></input></td>
                                     <td className="text-light">{path.path}</td>
                                     <td>
                                         <button className={styles.deleteButton} id="delete" onClick={() => handleDelete(path.path)}><span>🗑</span></button>
@@ -67,14 +66,13 @@ const Image = (props) => {
     const [imgSource, setImgSource] = useState('')
     
     const [pathListing, setPathListing] = useState([
-        { type: 'url', path: 'https://picsum.photos/id/256/200/200.jpg' }
+        { type: 'url', path: 'https://picsum.photos/id/256/200/200.jpg', selected: true }
         //{ type: 'localPath', path: 'jalka.jpg' }
     ])
     const [imageURL, setImageURL] = useState('https://picsum.photos/id/256/200/200.jpg')
     const [servicesToSend, setServicesToSend] = useState({})
 
     const [animation, setAnimation] = useState('')
-
 
     const job = props.job
     const setJob = props.setJob
@@ -129,7 +127,9 @@ const Image = (props) => {
         const queriesBasedOnConf = Object.keys(servicesToSend)
                             .filter(s => servicesToSend[s])
                             .map(service => props.configuration[service])
-                            .map(configuration => pathListing.map(path => createQuery(configuration, path)))
+                            .map(configuration => pathListing
+                                .filter(path => path.selected)
+                                .map(path => createQuery(configuration, path)))
                             .flat()
 
         const promises = queriesBasedOnConf.map(q => tagImage(q))
@@ -152,8 +152,11 @@ const Image = (props) => {
         const serviceArray = Object.keys(servicesToSend).filter(s => servicesToSend[s]).map(s => ` ${s}`)
         if (serviceArray.length < 1) {
             alert("Add at least one service")
+       
+        } else if (pathListing.filter(path => path.selected).length < 1) {
+            alert("Add at least one image")
         } else {
-            if (window.confirm(`You are sending ${pathListing.length} images to${serviceArray}`)) {
+            if (window.confirm(`You are sending ${pathListing.filter(path => path.selected).length} images to${serviceArray}`)) {
                 sendImages()
                 displayImage()
             }
@@ -166,7 +169,7 @@ const Image = (props) => {
     }
 
     const handleClickURL = () => {
-        setPathListing(pathListing.concat({ type: 'url', path: imageURL }))
+        setPathListing(pathListing.concat({ type: 'url', path: imageURL, selected: true}))
         setImageURL('')
     }
 
@@ -194,7 +197,7 @@ const Image = (props) => {
             ]
         }).then(result => {
             const paths = result.filePaths.map(filePath => {
-                return {type: 'localPath', path: filePath}
+                return {type: 'localPath', path: filePath, selected: true}
             })
             setPathListing(pathListing.concat(paths))
         }).catch(err => {
