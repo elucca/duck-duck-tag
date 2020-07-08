@@ -2,6 +2,7 @@ build
 release
 app/dist
 app/main.prod.js
+app/node_modules
 configs
 dll
 internals
