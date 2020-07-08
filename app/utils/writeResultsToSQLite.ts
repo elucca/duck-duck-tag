@@ -8,13 +8,12 @@ const writeResultsToSQLite = arg => {
 
     const insertIntoResultTable = (db,record) => {
 
-
         const currentTime = new Date().toISOString().split('T').join(' ')
-        const values = [record.service, record.label, record.accuracy, record.imgPath.type, record.imgPath.path, currentTime]
+        const values = [record.id, record.service, record.label, record.accuracy, record.imgPath.type, record.imgPath.path, currentTime]
 
-
-        // Horrible way to construct e.g INSERT INTO .... VALUES (?,?,?,?) 
-        const statement = db.prepare(`INSERT INTO result VALUES ` + '(' +values.map((v) => '?').join(',') + ')')
+        // Tad less akward way to construct insert statement
+        const statement = db.prepare('INSERT INTO result VALUES ('
+            + '?,'.repeat(values.length - 1) + '?)')
 
         return statement.run(values)
 
@@ -25,7 +24,7 @@ const writeResultsToSQLite = arg => {
     const db = new Database(filename, { verbose: console.log })
 
     // Create table if it does not exist
-    const createStmt = db.prepare('CREATE TABLE IF NOT EXISTS result(service text, label text, accuracy real, type text, path text, insertTS text)')
+    const createStmt = db.prepare('CREATE TABLE IF NOT EXISTS result(id text, service text, label text, accuracy real, type text, path text, insertTS text)')
     createStmt.run()
 
 

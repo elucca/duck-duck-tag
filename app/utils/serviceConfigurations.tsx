@@ -1,7 +1,9 @@
 
 import axios from 'axios'
-import Path from '../components/Path'
+import { Path } from '../types'
 import getFile from './getFile'
+
+import getId from '../utils/getId'
 
 class ServiceConfiguration {
 
@@ -66,10 +68,12 @@ class AzureConfig extends ServiceConfiguration {
 
         const manipulateTag = (tag) => (
             {
-                imgPath: this.imgPath,
+                path: this.imgPath.path,
+                type: this.imgPath.type,
                 service: this.name,
                 label: tag.name.toLowerCase(),
-                accuracy: tag.confidence
+                accuracy: tag.confidence,
+                id: getId()
             }
         )
 
@@ -134,10 +138,12 @@ class IBMconfig extends ServiceConfiguration {
 
         const manipulateTag = (tag) => (
             {
-                imgPath: this.imgPath,
+                path: this.imgPath.path,
+                type: this.imgPath.type,
                 service: this.name,
                 label: tag.class.toLowerCase(),
-                accuracy: tag.score
+                accuracy: tag.score,
+                id: getId()
             }
         )
         

@@ -22,17 +22,22 @@ const sendResultsToMainForWritingToSQLite = (result,filename) => {
 
 const makeRowForCSV = result => {
     const ts = new Date()
-    return [result.service, result.label, result.accuracy,  result.imgPath.type, result.imgPath.path, ts].join(';').concat('\n')
+    return [result.id, result.service, result.label, result.accuracy,  result.type, result.path, ts].join(';').concat('\n')
 }
 
 const createJSON = result => {
     
+    const json = [JSON.stringify({ 'id': result.id, 'service': result.service, 'label': result.label, 'accuracy': result.accuracy, 'type': result.type, 'path': result.path, ts: new Date() })]
+
+    console.log(json)
+
+    //return [JSON.stringify({ 'id': result.id, 'service': result.service, 'label': result.label, 'accuracy': result.accuracy, 'type': result.type, 'path': result.path, ts: new Date() })] // WriteRowsToFile expects an array
+
     return [JSON.stringify({ result: result, ts: new Date() })] // WriteRowsToFile expects an array
 }
 
 
 const writeRowsToFile = (rows: Array<string>, filename: string) => {
-
 
     const stream = fs.createWriteStream(filename, { flags: 'a' })
     rows.forEach(row => stream.write(row))
@@ -44,7 +49,7 @@ const exportResults = (job, formatToExportTo: string) => {
 
     console.log('exporting to', formatToExportTo) 
 
-    const filename = 'export.'.concat( formatToExportTo === 'SQLite' ? 'db' : formatToExportTo )
+    const filename = 'export.'.concat( formatToExportTo === 'SQLite' ? 'db' : formatToExportTo.toLowerCase() )
 
     if (formatToExportTo === 'SQLite') {
 
@@ -54,7 +59,6 @@ const exportResults = (job, formatToExportTo: string) => {
 
     } 
     
-
     const rows = formatToExportTo === 'CSV' ? job.result.map(makeRowForCSV) : createJSON(job.result)
 
     writeRowsToFile(rows, filename)

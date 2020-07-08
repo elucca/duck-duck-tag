@@ -1,11 +1,10 @@
+import { v4 as uuid } from 'uuid';
+
 const getId = () => {
-    const id = (new Date().getTime())
-    .toFixed(0)
-    .toString();
+    let testUuid = uuid();
+    const uuidShortened = testUuid.substring(0,8) + testUuid.substring(testUuid.length-13)
 
-    console.log(id)
-
-    return id
+    return uuidShortened
 }
 
 export default getId
