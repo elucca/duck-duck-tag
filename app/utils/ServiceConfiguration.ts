@@ -1,5 +1,6 @@
 //  import { Path } from "history"; // What is this?
-import Path from '../components/Path'
+//  See https://fullstackopen.com/osa7/react_router#use-history for history
+import { Path } from '../types'
 
 export default interface ServiceConfiguration {
 

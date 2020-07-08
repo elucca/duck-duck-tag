@@ -1,6 +1,6 @@
 import axios from 'axios'
 import ServiceConfiguration from './ServiceConfiguration'
-import Path from '../components/Path'
+import { Path } from '../types'
 
 const tagImage = (serviceConfiguration: ServiceConfiguration) => {
 

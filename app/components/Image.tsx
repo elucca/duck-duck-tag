@@ -10,7 +10,7 @@ import Results from './Results'
 import getUrlAsBase64 from '../utils/getUrlAsBase64'
 import getPathsFromTxt from '../utils/getPathsFromTxt'
 
-import Tag from './Tag'
+import { Tag } from '../types'
 import services from '../constants/services.json'
 import Analysis from './Analysis'
 import Export from './Export'
@@ -52,8 +52,7 @@ const Listing = ({pathListing, handleDelete}) => {
                                         <button className={styles.deleteButton} id="delete" onClick={() => handleDelete(path.path)}><span>🗑</span></button>
                                     </td>
                                 </tr>
-                            )
-                            }
+                            )}
                         )
                     }
                 </tbody>

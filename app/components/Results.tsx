@@ -1,10 +1,9 @@
 import React from 'react'
-import Tag from './Tag.ts'
+import { Tag } from '../types'
 
 
 const Results = ({ job }) => {
     
-
 
     if (!job) {
         return null
