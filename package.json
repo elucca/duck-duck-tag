@@ -198,6 +198,7 @@
     "@types/redux-logger": "^3.0.7",
     "@types/sinon": "^7.5.2",
     "@types/tapable": "^1.0.5",
+    "@types/uuid": "^8.0.0",
     "@types/vfile-message": "^2.0.0",
     "@types/webpack": "^4.41.3",
     "@typescript-eslint/eslint-plugin": "^2.17.0",
@@ -294,6 +295,7 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "source-map-support": "^0.5.16",
+    "uuid": "^8.2.0",
     "yaml": "^1.10.0"
   },
   "devEngines": {
