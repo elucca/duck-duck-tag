@@ -3,9 +3,12 @@ import styles from './Image.css';
 import { Table } from 'react-bootstrap'
 
 
-const Listing = ({ pathListing, handleDelete }) => {
+const Listing = ({ pathListing, handleDelete, handleDeleteAll }) => {
 
-    
+    let deleteAllButton
+    if (pathListing.length !== 0) {
+        deleteAllButton = <button className={styles.deleteButton} id='deleteAll' onClick={handleDeleteAll}>Delete all</button>
+    }
 
     return (
         <div>
@@ -33,6 +36,11 @@ const Listing = ({ pathListing, handleDelete }) => {
                             )}
                         )
                     }
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>{deleteAllButton}</td>    
+                    </tr>
                 </tbody>
             </Table>
         </div>

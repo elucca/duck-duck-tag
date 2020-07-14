@@ -157,10 +157,14 @@ const Setup = (props) => {
         setPathListing(deletedPath)
     }
 
+    const handleDeleteAll = () => {
+        setPathListing([])
+    }
+
 
     return(
         <div>
-            <Listing pathListing={pathListing} handleDelete={handleDelete} ></Listing>
+            <Listing pathListing={pathListing} handleDelete={handleDelete} handleDeleteAll={handleDeleteAll}></Listing>
             <h5>URL for image to tag:</h5>
             <input value={imageURL} onChange={handleURLchange} type='text' ></input>
             <button className={styles.button} id="url" onClick={handleClickURL}>Add image URL</button>
