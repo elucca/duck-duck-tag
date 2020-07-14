@@ -1,4 +1,4 @@
-import React,{ useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import getId from '../utils/getId'
 import getPathsFromTxt from '../utils/getPathsFromTxt'
 import Listing from './Listing'
@@ -61,15 +61,15 @@ const Setup = (props) => {
         setAnimation('processing')
         // Construct queries from configurations of selected services
         const queriesBasedOnConf = Object.keys(servicesToSend)
-                            .filter(s => servicesToSend[s])
-                            .map(service => props.configuration[service])
-                            .map(configuration => pathListing
-                                .filter(path => path.selected)
-                                .map(path => createQuery(configuration, path)))
-                            .flat()
+            .filter(s => servicesToSend[s])
+            .map(service => props.configuration[service])
+            .map(configuration => pathListing
+                .filter(path => path.selected)
+                .map(path => createQuery(configuration, path)))
+            .flat()
 
         const promises = queriesBasedOnConf.map(q => tagImage(q))
-    
+
 
         Promise.all(promises).then((values: Array<Tag>) => {
 
@@ -78,19 +78,19 @@ const Setup = (props) => {
             console.log(result)
 
             const sortedResult = result.sort((result1, result2) => (result1.accuracy > result2.accuracy) ? -1 : 1)
-            
+
 
             handleJobChange(servicesToSend, sortedResult)
         })
     }
 
     const handleAnalyzeClick = () => {
-        
+
 
         const serviceArray = Object.keys(servicesToSend).filter(s => servicesToSend[s]).map(s => ` ${s}`)
         if (serviceArray.length < 1) {
             alert("Add at least one service")
-       
+
         } else if (pathListing.filter(path => path.selected).length < 1) {
             alert("Add at least one image")
         } else {
@@ -100,15 +100,15 @@ const Setup = (props) => {
             }
         }
     }
-    
-    
+
+
 
     const handleURLchange = (e: Event) => {
         setImageURL(e.target.value)
     }
 
     const handleClickURL = () => {
-        setPathListing(pathListing.concat({ type: 'url', path: imageURL, selected: true, id: getId()}))
+        setPathListing(pathListing.concat({ type: 'url', path: imageURL, selected: true, id: getId() }))
         setImageURL('')
     }
 
@@ -120,7 +120,7 @@ const Setup = (props) => {
             ]
         }).then(result => {
             const paths = getPathsFromTxt(result.filePaths[0]).map(url => {
-                return {type: 'url', path: url, selected: true, id: getId()}
+                return { type: 'url', path: url, selected: true, id: getId() }
             })
             setPathListing(pathListing.concat(paths))
         }).catch(err => {
@@ -136,7 +136,7 @@ const Setup = (props) => {
             ]
         }).then(result => {
             const paths = result.filePaths.map(filePath => {
-                return {type: 'localPath', path: filePath, selected: true, id: getId()}
+                return { type: 'localPath', path: filePath, selected: true, id: getId() }
             })
             setPathListing(pathListing.concat(paths))
         }).catch(err => {
@@ -152,6 +152,13 @@ const Setup = (props) => {
         setServicesToSend(changedService)
     }
 
+    const handleImageSelection = () => {
+        console.log('hei, olen matti')
+        const selectedImages = pathListing.map(p => ({ ...p, selected: true }))
+        setPathListing(selectedImages)
+
+    }
+   
     const handleDelete = (path: string) => {
         const deletedPath = pathListing.filter(p => p.path !== path)
         setPathListing(deletedPath)
@@ -162,9 +169,9 @@ const Setup = (props) => {
     }
 
 
-    return(
+    return (
         <div>
-            <Listing pathListing={pathListing} handleDelete={handleDelete} handleDeleteAll={handleDeleteAll}></Listing>
+            <Listing pathListing={pathListing} handleDelete={handleDelete} handleDeleteAll={handleDeleteAll} handleImageSelection={handleImageSelection}></Listing>
             <h5>URL for image to tag:</h5>
             <input value={imageURL} onChange={handleURLchange} type='text' ></input>
             <button className={styles.button} id="url" onClick={handleClickURL}>Add image URL</button>
