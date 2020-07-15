@@ -6,8 +6,6 @@ import styles from './Image.css';
 import { Tag } from '../types'
 import services from '../constants/services.json'
 
-
-
 import createQuery from '../utils/serviceConfigurations'
 import tagImage from '../utils/tagImage';
 import configuration from '../reducers/configuration';
@@ -29,7 +27,6 @@ const Setup = (props) => {
     ])
     const [imageURL, setImageURL] = useState('https://picsum.photos/id/256/200/200.jpg')
 
-
     useEffect(() => {
 
         const initialServices = {}
@@ -38,8 +35,6 @@ const Setup = (props) => {
 
         setServicesToSend(initialServices)
     }, [])
-
-
 
     const handleJobChange = (services, result) => {
 
@@ -53,8 +48,6 @@ const Setup = (props) => {
 
         setJob(newJob)
     }
-
-
 
     const sendImages = () => {
 
@@ -70,7 +63,6 @@ const Setup = (props) => {
 
         const promises = queriesBasedOnConf.map(q => tagImage(q))
 
-
         Promise.all(promises).then((values: Array<Tag>) => {
 
             const result = values.flat() // values is a nested array: each service is it's own array
@@ -79,13 +71,11 @@ const Setup = (props) => {
 
             const sortedResult = result.sort((result1, result2) => (result1.accuracy > result2.accuracy) ? -1 : 1)
 
-
             handleJobChange(servicesToSend, sortedResult)
         })
     }
 
     const handleAnalyzeClick = () => {
-
 
         const serviceArray = Object.keys(servicesToSend).filter(s => servicesToSend[s]).map(s => ` ${s}`)
         if (serviceArray.length < 1) {
@@ -100,8 +90,6 @@ const Setup = (props) => {
             }
         }
     }
-
-
 
     const handleURLchange = (e: Event) => {
         setImageURL(e.target.value)
@@ -152,26 +140,29 @@ const Setup = (props) => {
         setServicesToSend(changedService)
     }
 
-    const handleImageSelection = () => {
-        console.log('hei, olen matti')
+    const handleImageSelection = (path: string) => {
+        const changedOneSelection = pathListing.map(p => p.path === path ? {...p, selected: !p.selected} : p)
+        setPathListing(changedOneSelection)
+    }
+
+    const handleImageSelectionAll = () => {
         const selectedImages = pathListing.map(p => ({ ...p, selected: true }))
         setPathListing(selectedImages)
 
     }
    
     const handleDelete = (path: string) => {
-        const deletedPath = pathListing.filter(p => p.path !== path)
-        setPathListing(deletedPath)
+        const deletedOneListing = pathListing.filter(p => p.path !== path)
+        setPathListing(deletedOneListing)
     }
 
     const handleDeleteAll = () => {
         setPathListing([])
     }
 
-
     return (
         <div>
-            <Listing pathListing={pathListing} handleDelete={handleDelete} handleDeleteAll={handleDeleteAll} handleImageSelection={handleImageSelection}></Listing>
+            <Listing pathListing={pathListing} handleDelete={handleDelete} handleDeleteAll={handleDeleteAll} handleImageSelectionAll={handleImageSelectionAll} handleImageSelection={handleImageSelection}></Listing>
             <h5>URL for image to tag:</h5>
             <input value={imageURL} onChange={handleURLchange} type='text' ></input>
             <button className={styles.button} id="url" onClick={handleClickURL}>Add image URL</button>

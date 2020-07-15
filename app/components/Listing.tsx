@@ -3,7 +3,7 @@ import styles from './Image.css';
 import { Table } from 'react-bootstrap'
 
 
-const Listing = ({ pathListing, handleDelete, handleDeleteAll, handleImageSelection }) => {
+const Listing = ({ pathListing, handleDelete, handleDeleteAll, handleImageSelectionAll, handleImageSelection }) => {
 
     let deleteAllButton
     if (pathListing.length !== 0) {
@@ -12,7 +12,7 @@ const Listing = ({ pathListing, handleDelete, handleDeleteAll, handleImageSelect
 
     let selectAllButton
     if (pathListing.length !== 0) {
-        selectAllButton = <button className={styles.button} id='selectAll' onClick={handleImageSelection}>Select all</button>
+        selectAllButton = <button className={styles.button} id='selectAll' onClick={handleImageSelectionAll}>Select all</button>
     }
 
     return (
@@ -32,7 +32,7 @@ const Listing = ({ pathListing, handleDelete, handleDeleteAll, handleImageSelect
                             return(
                                 // TODO: add id to key and handleDelete
                                 <tr key={path.path}>
-                                    <td><input type='checkbox' defaultChecked onChange={() => path.selected = !path.selected}></input></td>
+                                    <td><input type='checkbox' checked={path.selected} onChange={() => handleImageSelection(path.path)}></input></td>
                                     <td className="text-light">{path.path}</td>
                                     <td>
                                         <button className={styles.deleteButton} id="delete" onClick={() => handleDelete(path.path)}><span>🗑</span></button>
