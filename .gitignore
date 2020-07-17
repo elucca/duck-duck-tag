@@ -1,7 +1,7 @@
 node_modules
 .env
 release
-app/dist/*
+app/dist/
 app/Release
 app/main.prod.js
 export.*
