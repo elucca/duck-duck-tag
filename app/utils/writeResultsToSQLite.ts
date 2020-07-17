@@ -9,7 +9,7 @@ const writeResultsToSQLite = arg => {
     const insertIntoResultTable = (db,record) => {
 
         const currentTime = new Date().toISOString().split('T').join(' ')
-        const values = [record.id, record.service, record.label, record.accuracy, record.imgPath.type, record.imgPath.path, currentTime]
+        const values = [record.id, record.service, record.label, record.accuracy, record.type, record.path, currentTime]
 
         // Tad less akward way to construct insert statement
         const statement = db.prepare('INSERT INTO result VALUES ('

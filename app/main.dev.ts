@@ -131,7 +131,6 @@ app.on('activate', () => {
 
 // Listener for request to export dat to sqlite
 ipcMain.on('request-write-to-sqlite', (event, arg) => {
-  
     
     writeResultsToSQLite(arg)
 });
