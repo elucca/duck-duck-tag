@@ -297,6 +297,12 @@ export default class MenuBuilder {
               shell.openExternal('https://github.com/electron/electron/issues');
             }
           },
+          {
+            label: 'DevTools',
+            click: () => {
+              this.mainWindow.webContents.openDevTools();
+            }
+          }
           
         ]
       }
