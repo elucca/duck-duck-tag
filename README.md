@@ -47,6 +47,7 @@ yarn dev
 
 ## Documentation
 
+- [Definition of done](https://github.com/duck-duck-tag/duck-duck-tag/blob/master/DefinitionOfDone.md)
 - [Product backlog](https://docs.google.com/spreadsheets/d/1ypMfZBOHwcXqzx_ehelTg8syBYQba85UtAmK6r7JvH8/edit?usp=sharing)
 - [Hour accounting](https://docs.google.com/spreadsheets/d/1ypMfZBOHwcXqzx_ehelTg8syBYQba85UtAmK6r7JvH8/edit#gid=1685552279)
 - [Sprint task board](https://github.com/duck-duck-tag/duck-duck-tag/projects)
