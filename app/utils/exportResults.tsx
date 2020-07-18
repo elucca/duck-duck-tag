@@ -36,10 +36,10 @@ const createJSON = result => {
 
 
 
-const exportResults = (job, formatToExportTo: string) => {
+const exportResults = (job, formatToExportTo: string, file='export') => {
 
 
-    const filename = 'export.'.concat( formatToExportTo === 'SQLite' ? 'db' : formatToExportTo.toLowerCase() )
+    const filename = file.concat('.').concat( formatToExportTo === 'SQLite' ? 'db' : formatToExportTo.toLowerCase() )
 
     if (formatToExportTo === 'SQLite') {
 
