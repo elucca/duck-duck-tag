@@ -3,18 +3,12 @@ import Enzyme, { shallow } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import Analysis from '../../app/components/Analysis';
 
+import dummyJob from '../helpers/dummyjob.json'
+
+
 Enzyme.configure({ adapter: new Adapter() });
 
 
-const dummyJob = { 
-  services: ['Azure','IBM'],
-  result: [
-    { label: 'Test', service: 'Azure' },
-    { label: 'BigTest', service: 'IBM' },
-    { label: 'Blaah', service: 'Azure' },
-    { label: 'Test', service: 'IBM' }
-  ]
-}
 
 const dummyAnimation = 'processing'
 

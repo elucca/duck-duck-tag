@@ -1,4 +1,4 @@
-
+import writeRowsToFile from './writeRowsToFile'
 import fs  from 'fs'
 import { ipcRenderer } from 'electron'
 
@@ -29,25 +29,15 @@ const createJSON = result => {
     
     const json = [JSON.stringify({ 'id': result.id, 'service': result.service, 'label': result.label, 'accuracy': result.accuracy, 'type': result.type, 'path': result.path, ts: new Date() })]
 
-    console.log(json)
-
     //return [JSON.stringify({ 'id': result.id, 'service': result.service, 'label': result.label, 'accuracy': result.accuracy, 'type': result.type, 'path': result.path, ts: new Date() })] // WriteRowsToFile expects an array
 
     return [JSON.stringify({ result: result, ts: new Date() })] // WriteRowsToFile expects an array
 }
 
 
-const writeRowsToFile = (rows: Array<string>, filename: string) => {
-
-    const stream = fs.createWriteStream(filename, { flags: 'a' })
-    rows.forEach(row => stream.write(row))
-    stream.end()
-}
 
 const exportResults = (job, formatToExportTo: string) => {
 
-
-    console.log('exporting to', formatToExportTo) 
 
     const filename = 'export.'.concat( formatToExportTo === 'SQLite' ? 'db' : formatToExportTo.toLowerCase() )
 

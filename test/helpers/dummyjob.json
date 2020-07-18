@@ -1,0 +1,9 @@
+{ 
+    "services": ["Azure","IBM"],
+    "result": [
+      { "id": "1", "label": "Test", "service": "Azure", "accuracy": 0.52 ,  "type": "localPath", "path": "C:/jalka.jpg" },
+      { "id": "2", "label": "BigTest", "service": "IBM", "accuracy": 0.2 ,  "type": "localPath", "path": "Z:/jalka.jpg" },
+      { "id": "3", "label": "Blaah", "service": "Azure", "accuracy": 0.7 ,  "type": "url", "path": "http://foot.hiit.fi/jalka.jpg" },
+      { "id": "4", "label": "Test", "service": "IBM", "accuracy": 0.8,      "type": "url", "path": "http://foot.hiit.fi/jalka.jpg" }
+    ]
+}
