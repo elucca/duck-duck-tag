@@ -7,12 +7,13 @@ import exportResults from '../../app/utils/exportResults'
 import dummyJob from '../helpers/dummyjob.json'
 import writeResultsToSQLite from '../../app/utils/writeResultsToSQLite'
 
+
 const testFilename = 'testDummyJobExport'
 
 const clean = () => {
 
     // Returns a single promise for two promises (each promise removing the created test exportfile when resolving)
-    return Promise.all( ['.csv','.json'].map(extension => fs.unlink(testFilename.concat(extension), (err) => err))  )
+    return Promise.all( ['.csv','.json','.db'].map(extension => fs.unlink(testFilename.concat(extension), (err) => err))  )
 }
 
 
@@ -44,11 +45,9 @@ test('writing to JSON creates a file', () => {
 
 })
 
-/*
- // Does not work (yet?)
 test('writing to SQLite creates a file', () => {
 
-    writeResultsToSQLite({result: dummyJob, filename: testFilename.concat('.db') })
+    writeResultsToSQLite({result: dummyJob.result, filename: testFilename.concat('.db') })
 
     return fs.access( testFilename.concat('.db') , (e) => {
         // see before
@@ -56,4 +55,3 @@ test('writing to SQLite creates a file', () => {
     })
 
 })
-*/

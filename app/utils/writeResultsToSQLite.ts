@@ -21,7 +21,7 @@ const writeResultsToSQLite = arg => {
 
 
 
-    const db = new Database(filename, { verbose: console.log })
+    const db = new Database(filename) // { verbose: console.log }
 
     // Create table if it does not exist
     const createStmt = db.prepare('CREATE TABLE IF NOT EXISTS result(id text, service text, label text, accuracy real, type text, path text, insertTS text)')
