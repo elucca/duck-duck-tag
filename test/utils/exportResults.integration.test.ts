@@ -17,11 +17,12 @@ const clean = () => {
 }
 
 
+/*
 afterAll(() => {
     // afterAll expects an function returning a promise
     return clean()
 });
-
+*/
 
 test('writing to CSV creates a file', () => {
 
