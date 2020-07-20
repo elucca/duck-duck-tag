@@ -9,11 +9,16 @@ import writeResultsToSQLite from '../../app/utils/writeResultsToSQLite'
 
 const testFilename = 'testDummyJobExport'
 
+const clean = () => {
+
+    // Returns a single promise for two promises (each promise removing the created test exportfile when resolving)
+    return Promise.all( ['.csv','.json'].map(extension => fs.unlink(testFilename.concat(extension), (err) => err))  )
+}
+
 
 afterAll(() => {
-    fs.unlinkSync(testFilename.concat('.json'))
-    fs.unlinkSync(testFilename.concat('.csv'))
-
+    // afterAll expects an function returning a promise
+    return clean()
 });
 
 
@@ -24,7 +29,7 @@ test('writing to CSV creates a file', () => {
     return fs.access( testFilename.concat('.csv') , (e) => {
         // if the file is found, access returns undefined. If not, an error is thrown. Therefore we test that the error does not exist
         // IS THERE A BETTER WAY?
-        expect(e).toBeFalsy() 
+        expect(e).toBeFalsy()
     })
 })
 
