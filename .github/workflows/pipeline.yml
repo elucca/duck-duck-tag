@@ -19,7 +19,10 @@ jobs:
           node-version: 12
 
       - name: Install dependencies
-        run: yarn install
+        run: |
+             yarn install
+             cd app
+             npm rebuild
 
       - name: Run build
         run: yarn run build
@@ -41,7 +44,10 @@ jobs:
           node-version: 12
 
       - name: Install dependencies
-        run: yarn install
+        run: |
+             yarn install
+             cd app
+             npm rebuild
 
       - name: Run linter
         run: yarn run lint
