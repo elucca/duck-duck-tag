@@ -16,13 +16,11 @@ const clean = () => {
     return Promise.all( ['.csv','.json','.db'].map(extension => fs.unlink(testFilename.concat(extension), (err) => err))  )
 }
 
-
-/*
 afterAll(() => {
     // afterAll expects an function returning a promise
     return clean()
 });
-*/
+
 
 test('writing to CSV creates a file', () => {
 
