@@ -1,3 +1,7 @@
+/**
+ * @jest-environment @jest-runner/electron/main
+ */
+
 import writeRowsToFile from './writeRowsToFile'
 import fs  from 'fs'
 import { ipcRenderer } from 'electron'
