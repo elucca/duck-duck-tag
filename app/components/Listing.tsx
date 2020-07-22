@@ -2,7 +2,6 @@ import React from 'react'
 import styles from './Image.css';
 import { Table } from 'react-bootstrap'
 
-
 const Listing = ({ pathListing, handleDelete, handleDeleteAll, handleImageSelectionAll, handleImageSelection }) => {
 
     let deleteAllButton
@@ -12,7 +11,16 @@ const Listing = ({ pathListing, handleDelete, handleDeleteAll, handleImageSelect
 
     let selectAllButton
     if (pathListing.length !== 0) {
-        selectAllButton = <button className={styles.button} id='selectAll' onClick={handleImageSelectionAll}>Select all</button>
+        let buttonText
+        let selectionValue
+        if(pathListing.filter(p => p.selected === true).length === pathListing.length) {
+            buttonText = 'Unselect all'
+            selectionValue = false
+        } else {
+            buttonText = 'Select all'
+            selectionValue = true
+        }
+    selectAllButton = <button className={styles.button} id='selectAll' onClick={() => handleImageSelectionAll(selectionValue)}>{buttonText}</button>
     }
 
     return (
@@ -51,6 +59,5 @@ const Listing = ({ pathListing, handleDelete, handleDeleteAll, handleImageSelect
         </div>
     )
 }
-
 
 export default Listing

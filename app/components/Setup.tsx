@@ -5,12 +5,10 @@ import Listing from './Listing'
 import styles from './Image.css';
 import { Tag } from '../types'
 import services from '../constants/services.json'
-
 import createQuery from '../utils/serviceConfigurations'
 import tagImage from '../utils/tagImage';
 import configuration from '../reducers/configuration';
 import getFile from '../utils/getFile';
-
 import { remote } from 'electron'
 
 const Setup = (props) => {
@@ -20,7 +18,6 @@ const Setup = (props) => {
     const setJob = props.setJob
 
     const [servicesToSend, setServicesToSend] = useState({})
-
     const [pathListing, setPathListing] = useState([
         { type: 'url', path: 'https://picsum.photos/id/256/200/200.jpg', selected: true, id: getId() }
         //{ type: 'localPath', path: 'jalka.jpg' }
@@ -28,29 +25,22 @@ const Setup = (props) => {
     const [imageURL, setImageURL] = useState('https://picsum.photos/id/256/200/200.jpg')
 
     useEffect(() => {
-
         const initialServices = {}
         services.forEach((service: object) => initialServices[service.name] = 0)
-
-
         setServicesToSend(initialServices)
     }, [])
 
     const handleJobChange = (services, result) => {
-
         const serviceNames = Object.keys(services).filter(key => services[key])
-
         const newJob = {
             sessionJobID: job.sessionJobID + 1,
             services: serviceNames,
             result: result
         }
-
         setJob(newJob)
     }
 
     const sendImages = () => {
-
         setAnimation('processing')
         // Construct queries from configurations of selected services
         const queriesBasedOnConf = Object.keys(servicesToSend)
@@ -60,23 +50,17 @@ const Setup = (props) => {
                 .filter(path => path.selected)
                 .map(path => createQuery(configuration, path)))
             .flat()
-
         const promises = queriesBasedOnConf.map(q => tagImage(q))
-
         Promise.all(promises).then((values: Array<Tag>) => {
-
             const result = values.flat() // values is a nested array: each service is it's own array
             setAnimation('')
             console.log(result)
-
             const sortedResult = result.sort((result1, result2) => (result1.accuracy > result2.accuracy) ? -1 : 1)
-
             handleJobChange(servicesToSend, sortedResult)
         })
     }
 
     const handleAnalyzeClick = () => {
-
         const serviceArray = Object.keys(servicesToSend).filter(s => servicesToSend[s]).map(s => ` ${s}`)
         if (serviceArray.length < 1) {
             alert("Add at least one service")
@@ -133,10 +117,8 @@ const Setup = (props) => {
     }
 
     const handleSelection = (name: string) => {
-
         const changedService = { ...servicesToSend }
         changedService[name] = servicesToSend[name] === 1 ? 0 : 1
-
         setServicesToSend(changedService)
     }
 
@@ -145,10 +127,9 @@ const Setup = (props) => {
         setPathListing(changedOneSelection)
     }
 
-    const handleImageSelectionAll = () => {
-        const selectedImages = pathListing.map(p => ({ ...p, selected: true }))
+    const handleImageSelectionAll = (selectionValue : boolean) => {
+        const selectedImages = pathListing.map(p => ({ ...p, selected: selectionValue }))
         setPathListing(selectedImages)
-
     }
    
     const handleDelete = (path: string) => {
@@ -184,10 +165,8 @@ const Setup = (props) => {
                 </form>
             </div>
             <button className={styles.button} id="analyze-button" onClick={handleAnalyzeClick}>Analyze images</button>
-
         </div>
     )
-
 }
 
 export default Setup
