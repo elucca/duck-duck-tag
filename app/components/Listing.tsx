@@ -1,8 +1,9 @@
 import React from 'react'
 import styles from './Image.css';
-import { Table, Button } from 'react-bootstrap'
+import { Table, Button} from 'react-bootstrap'
+import InfoModal from './InfoModal'
 
-const Listing = ({ pathListing, handleDelete, handleDeleteAll, handleImageSelectionAll, handleImageSelection }) => {
+const Listing = ({ pathListing, handleDelete, handleDeleteAll, handleImageSelectionAll, handleImageSelection, handleClose, showDeleteAllChoice, pathListingToEmpty }) => {
 
     let unselectAllButton
     let selectAllButton
@@ -12,10 +13,12 @@ const Listing = ({ pathListing, handleDelete, handleDeleteAll, handleImageSelect
         selectAllButton = <Button variant="outline-success" id='selectAll' onClick={() => handleImageSelectionAll(true)}>Select all</Button>
         unselectAllButton = <Button variant="outline-secondary" id='unselectAll' onClick={() => handleImageSelectionAll(false)}>Unselect all</Button>
     }
-
-
-   
-
+    const modalTitle = 'Art thou certain thou wishest to discard all images?'
+    const modalBody = 
+        <div>
+            <Button variant="primary" onClick={pathListingToEmpty}>aye</Button>
+            <Button variant="secondary" onClick={handleClose}>nay</Button>
+        </div>
 
     return (
         <div>
@@ -37,7 +40,7 @@ const Listing = ({ pathListing, handleDelete, handleDeleteAll, handleImageSelect
                                     <td><input type='checkbox' checked={path.selected} onChange={() => handleImageSelection(path.path)}></input></td>
                                     <td className="text-light">{path.path}</td>
                                     <td>
-                                        <button className={styles.deleteButton} id="delete" onClick={() => handleDelete(path.path)}><span>🗑</span></button>
+                                        <Button className={styles.deleteButton} id="delete" onClick={() => handleDelete(path.path)}><span>🗑</span></Button>
                                     </td>
                                 </tr>
                             )}
@@ -46,7 +49,8 @@ const Listing = ({ pathListing, handleDelete, handleDeleteAll, handleImageSelect
                     <tr>
                         <td>{selectAllButton}{unselectAllButton}</td>
                         <td></td>
-                        <td>{deleteAllButton}</td>    
+                        <td>{deleteAllButton}</td>  
+                        <InfoModal show={showDeleteAllChoice} hide={handleClose} title={modalTitle} body={modalBody}/> 
                     </tr>
                 </tbody>
             </Table>

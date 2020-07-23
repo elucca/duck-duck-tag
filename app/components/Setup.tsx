@@ -23,6 +23,7 @@ const Setup = (props) => {
         //{ type: 'localPath', path: 'jalka.jpg' }
     ])
     const [imageURL, setImageURL] = useState('https://picsum.photos/id/256/200/200.jpg')
+    const [showDeleteAllChoice, setShowDeleteAllChoice] = useState(false)
 
     useEffect(() => {
         const initialServices = {}
@@ -138,14 +139,23 @@ const Setup = (props) => {
     }
 
     const handleDeleteAll = () => {
-        if(window.confirm('Are you sure you want to delete all the images?')) {
-            setPathListing([])
-        }
+        setShowDeleteAllChoice(true)
     }
+
+    const pathListingToEmpty = () => {
+        setPathListing([])
+        setShowDeleteAllChoice(false)
+    }
+
+    const handleClose = () => setShowDeleteAllChoice(false)
 
     return (
         <div>
-            <Listing pathListing={pathListing} handleDelete={handleDelete} handleDeleteAll={handleDeleteAll} handleImageSelectionAll={handleImageSelectionAll} handleImageSelection={handleImageSelection}></Listing>
+            <Listing pathListing={pathListing} handleDelete={handleDelete} 
+                handleDeleteAll={handleDeleteAll} handleImageSelectionAll={handleImageSelectionAll} 
+                handleImageSelection={handleImageSelection} handleClose={handleClose} 
+                showDeleteAllChoice={showDeleteAllChoice} pathListingToEmpty={pathListingToEmpty}></Listing>
+            
             <h5>URL for image to tag:</h5>
             <input value={imageURL} onChange={handleURLchange} type='text' ></input>
             <button className={styles.button} id="url" onClick={handleClickURL}>Add image URL</button>

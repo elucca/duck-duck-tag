@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 
 import styles from './Image.css';
-import { Modal, Button } from 'react-bootstrap'
-
+import { Button } from 'react-bootstrap'
+import InfoModal from './InfoModal'
 import exportResults from '../utils/exportResults'
 
 const Export = ({ job })  => {
@@ -24,27 +24,19 @@ const Export = ({ job })  => {
         
     }
 
-    const titleStyle = {
-        color: "black",
-        fontFamily: 'Arial'
-    }
+    const modalTitle = 'Bitte wählen Sie das Exportformat'
+    const modalbody =
+        <div>
+            {
+                exportFormats.map(format =>  <Button variant="primary" key={format} onClick={() => chooseFormatAndExport(format) }>{ format }</Button>)
+            }
+        </div>
 
     return(
         <div>
             <button className={styles.button} onClick={handleClickExport}>Export tags</button>
                 
-            <Modal show={showExportChoice} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title style={titleStyle}>Choose export format</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    
-                        {
-                            exportFormats.map(format =>  <Button variant="primary" key={format} onClick={() => chooseFormatAndExport(format) }>{ format }</Button>)
-                        }
-                  
-                </Modal.Body>
-            </Modal >
+            <InfoModal show={showExportChoice} hide={handleClose} title={modalTitle} body={modalbody}/>
         </div>
     )
 
