@@ -1,27 +1,21 @@
 import React from 'react'
 import styles from './Image.css';
-import { Table } from 'react-bootstrap'
+import { Table, Button } from 'react-bootstrap'
 
 const Listing = ({ pathListing, handleDelete, handleDeleteAll, handleImageSelectionAll, handleImageSelection }) => {
 
+    let unselectAllButton
+    let selectAllButton
     let deleteAllButton
     if (pathListing.length !== 0) {
-        deleteAllButton = <button className={styles.deleteButton} id='deleteAll' onClick={handleDeleteAll}>Delete all</button>
+        deleteAllButton = <Button className={styles.deleteButton} id='deleteAll' onClick={handleDeleteAll}>Delete all</Button>
+        selectAllButton = <Button variant="outline-success" id='selectAll' onClick={() => handleImageSelectionAll(true)}>Select all</Button>
+        unselectAllButton = <Button variant="outline-secondary" id='unselectAll' onClick={() => handleImageSelectionAll(false)}>Unselect all</Button>
     }
 
-    let selectAllButton
-    if (pathListing.length !== 0) {
-        let buttonText
-        let selectionValue
-        if(pathListing.filter(p => p.selected === true).length === pathListing.length) {
-            buttonText = 'Unselect all'
-            selectionValue = false
-        } else {
-            buttonText = 'Select all'
-            selectionValue = true
-        }
-    selectAllButton = <button className={styles.button} id='selectAll' onClick={() => handleImageSelectionAll(selectionValue)}>{buttonText}</button>
-    }
+
+   
+
 
     return (
         <div>
@@ -50,7 +44,7 @@ const Listing = ({ pathListing, handleDelete, handleDeleteAll, handleImageSelect
                         )
                     }
                     <tr>
-                        <td>{selectAllButton}</td>
+                        <td>{selectAllButton}{unselectAllButton}</td>
                         <td></td>
                         <td>{deleteAllButton}</td>    
                     </tr>
