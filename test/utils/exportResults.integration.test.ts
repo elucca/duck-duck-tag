@@ -6,9 +6,13 @@ import fs from 'fs'
 import exportResults from '../../app/utils/exportResults'
 import dummyJob from '../helpers/dummyjob.json'
 import writeResultsToSQLite from '../../app/utils/writeResultsToSQLite'
+import Database from '../../app/node_modules/better-sqlite3'
 
 
+// All exports are written with this filename
 const testFilename = 'testDummyJobExport'
+
+
 
 const clean = () => {
 
@@ -44,13 +48,30 @@ test('writing to JSON creates a file', () => {
 
 })
 
-test('writing to SQLite creates a file', () => {
 
-    writeResultsToSQLite({result: dummyJob.result, filename: testFilename.concat('.db') })
 
-    return fs.access( testFilename.concat('.db') , (e) => {
-        // see before
-        expect(e).toBeFalsy() 
+
+describe('exporting to SQLite', () => {
+
+    const DBfilename = testFilename.concat('.db')
+    writeResultsToSQLite({result: dummyJob.result, filename: DBfilename  })
+
+    test('creates a file', () => {        
+        return fs.access( DBfilename , (e) => {
+            // see before
+            expect(e).toBeFalsy() 
+        })
+    })
+    
+    test('inserts the correct amount of observations', () => {
+
+        const db = new Database(DBfilename)
+        const count = db.prepare(`SELECT COUNT(*) AS rowcount FROM result WHERE service='Azure'`) // Count of Azure related rows
+
+        expect( count.get().rowcount ).toEqual(2)
+
     })
 
+
 })
+
