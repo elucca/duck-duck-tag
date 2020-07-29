@@ -26,29 +26,76 @@ afterAll(() => {
 });
 
 
-test('writing to CSV creates a file', () => {
 
-    exportResults(dummyJob,'csv',testFilename)
+describe('exporting to CSV', () => {
+        
+    exportResults(dummyJob,'CSV',testFilename)
 
-    return fs.access( testFilename.concat('.csv') , (e) => {
-        // if the file is found, access returns undefined. If not, an error is thrown. Therefore we test that the error does not exist
-        // IS THERE A BETTER WAY?
-        expect(e).toBeFalsy()
+    const filename = testFilename.concat('.csv')
+
+
+    // Jest will wait until done() is called
+    test('creates a file', done => {
+
+        return fs.access( filename , (e) => {
+            // if the file is found, access returns undefined. If not, an error is thrown. Therefore we test that the error does not exist
+            // IS THERE A BETTER WAY?
+            expect(e).toBeFalsy()
+            done()
+        })
     })
+    
+    test('writes lines in the file', done => {
+
+
+        return fs.readFile(filename,'utf-8',(e,data) => {
+
+            const lines =   data.split('\n')
+                                .filter(line => line.length>0)
+
+            expect( lines[0].split(';') ).toContain('C:/jalka.jpg')
+
+            expect( lines.length ).toBe(4)
+            done()
+        })
+
+    })
+  
 })
 
-test('writing to JSON creates a file', () => {
+describe('exporting to JSON', () => {
+        
+    exportResults(dummyJob,'JSON',testFilename)
 
-    exportResults(dummyJob,'json',testFilename)
+    const filename = testFilename.concat('.json')
 
-    return fs.access( testFilename.concat('.json') , (e) => {
-        // see before
-        expect(e).toBeFalsy() 
+
+    // Jest will wait until done() is called
+    test('creates a file', done => {
+
+        return fs.access( filename , (e) => {
+            // if the file is found, access returns undefined. If not, an error is thrown. Therefore we test that the error does not exist
+            // IS THERE A BETTER WAY?
+            expect(e).toBeFalsy()
+            done()
+        })
     })
+    
+    test('writes JSON in the file', done => {
 
+        return fs.readFile(filename,'utf-8',(e,data) => {
+
+            const parsedJSON = JSON.parse( data ) // Test throws error if JSON is not valid
+
+            expect( parsedJSON.result[0].path ).toEqual('C:/jalka.jpg') 
+            expect( parsedJSON.result.length ).toBe(4)
+
+            done()
+        })
+
+    })
+  
 })
-
-
 
 
 describe('exporting to SQLite', () => {
