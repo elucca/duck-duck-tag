@@ -4,9 +4,9 @@
 
 # duck-duck-tag
 
-or \***\*Tools for automated image analysis\*\*** in social sciences shall hatch into researcher-friendly desktop application. This application will allow sending images for tagging via multiple image recognition services, for example IBM and Azure. When the image recognition process is complete, the application shows tags and their accuracy. You can also export data to a CSV-file.
+or \***\*Tools for automated image analysis\*\*** in social sciences shall hatch into a researcher-friendly desktop application. This application will allow sending images for tagging via multiple image recognition services, for example IBM Watson and Microsoft Azure. When the image recognition process is complete, the application shows tags and their accuracy. You can also export the data in CSV, JSON, and SQLite format. 
 
-The application is being built on the specification and requirement provided by Matti Nelimarkka from University of Helsinki. Here is a link to the customer's blogpost about the issue [in finnish](https://rajapinta.co/2020/02/24/onko-maailma-erilainen-riippuen-siita-kenen-tekoaly-sita-katselee/)
+The application is being built on the specification and requirement provided by Matti Nelimarkka from the University of Helsinki. Here is a link to the client's blog post about the issue [in Finnish](https://rajapinta.co/2020/02/24/onko-maailma-erilainen-riippuen-siita-kenen-tekoaly-sita-katselee/)
 
 ## Table of Contents
 
