@@ -7,8 +7,6 @@ import { Tag } from '../types'
 import services from '../constants/services.json'
 import createQuery from '../utils/serviceConfigurations'
 import tagImage from '../utils/tagImage';
-import configuration from '../reducers/configuration';
-import getFile from '../utils/getFile';
 import { remote } from 'electron'
 
 const Setup = (props) => {
@@ -16,12 +14,10 @@ const Setup = (props) => {
     const setAnimation = props.setAnimation
     const job = props.job
     const setJob = props.setJob
+    const pathListing = props.pathListing
+    const setPathListing = props.setPathListing
 
     const [servicesToSend, setServicesToSend] = useState({})
-    const [pathListing, setPathListing] = useState([
-        { type: 'url', path: 'https://picsum.photos/id/256/200/200.jpg', selected: true, id: getId() }
-        //{ type: 'localPath', path: 'jalka.jpg' }
-    ])
     const [imageURL, setImageURL] = useState('https://picsum.photos/id/256/200/200.jpg')
     const [showDeleteAllChoice, setShowDeleteAllChoice] = useState(false)
 

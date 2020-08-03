@@ -5,6 +5,7 @@ import counter from './counter';
 import configuration from './configuration'
 import job from './job'
 import imageId from './assignId'
+import pathListing from './pathListing'
 
 export default function createRootReducer(history: History) {
   return combineReducers({
@@ -12,6 +13,7 @@ export default function createRootReducer(history: History) {
     counter,
     configuration,
     job,
-    imageId
+    imageId,
+    pathListing
   });
 }
