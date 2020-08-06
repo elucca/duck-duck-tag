@@ -1,6 +1,10 @@
+
 const fs    = require('fs')
 const axios = require('axios')
 const crypto = require('crypto-js')
+const sha256 = require('crypto-js/sha256')
+const moment = require('moment')
+
 
 const postaa = () => {
 
@@ -12,10 +16,28 @@ const postaa = () => {
         return kSigning;
     }
 
-    const signedHeaders = 'content-type;host;x-amz-date' // headers to use for the signature
-    const credentialScope = '20200805/us-east-1/rekognition/aws4_request'
-    const algorithm = 'AWS4-HMAC-SHA256'
+    
+    const getUrlAsBase64 = (url) => {
+        return axios.get(url, {
+            responseType: 'arraybuffer'
+        })
+        .then(response =>  Buffer.from(response.data, 'binary').toString('base64'))
+    }
 
+    const date = moment().format("YYYYMMDD")
+    const amzdate = moment().format("YYYYMMDDTHHmmssZ")
+
+    // console.log("date", date, typeof(date))
+    // console.log("date", amzdate, typeof(amzdate))
+
+
+    const signedHeaders = 'content-type;host;x-amz-date' // headers to use for the signature
+    const credentialScope = date + '/us-east-1/rekognition/aws4_request'
+    const algorithm = 'AWS4-HMAC-SHA256'
+    
+
+    const requestPayload = '' // from body ??
+    
 
     // Constructing a HTTP request following these instructions (4 tasks): https://docs.aws.amazon.com/general/latest/gr/sigv4_signing.html
 
@@ -27,33 +49,37 @@ const postaa = () => {
         'Action=DetectLabel\n' + // might require headers as query strings
         'content-type:application/x-amz-json-1.1\n' + 
         'host:rekognition.us-east-1.amazonaws.com\n' + 
-        'x-amz-date:20200805T123600Z\n' +
-        signedHeaders + '\n'
-        // hexencode(hash(requestpayload))
+        'x-amz-date:' + amzdate + '\n' +
+        signedHeaders + '\n' + 
+        sha256(requestPayload).toString()
+
+    // console.log("hashed payload", sha256(requestPayload).toString())
 
 
     // 2. Task: create a string to sign: https://docs.aws.amazon.com/general/latest/gr/sigv4-create-string-to-sign.html
 
     const string_to_sign = 
         algorithm + '\n' +
-        '20200805T123600Z\n' +
+        amzdate + '\n' +
         credentialScope + '\n' +
-        canonicalRequest // should be base-16 encoded
+        sha256(canonicalRequest).toString()
+
+    // console.log("hashed canonical request", sha256(canonicalRequest).toString())
+    // console.log("string to sign", string_to_sign)
 
 
     // 3. Task: calculate the signature: https://docs.aws.amazon.com/general/latest/gr/sigv4-calculate-signature.html
     const signingKey = getSignatureKey(
         "secret_access_key", // substitute with credential
-        "20200805",
+        date,
         "us-east-1", // don't know whether this is correct
         "rekognition"
     )
 
-    console.log("avaimemme", signingKey.toString()) // should be a string (?)
+    console.log("avaimemme", signingKey.toString())
 
-    // pseudocode
-    const signature = HexEncode(HMAC(signingKey, string_to_sign))
-
+    const signature = crypto.HmacSHA256(signingKey, string_to_sign).toString()
+    console.log("allekirjoituksemme", signature)
 
     // 4. Task: construct HTTP request: https://docs.aws.amazon.com/general/latest/gr/sigv4-add-signature-to-request.html
 
@@ -65,30 +91,36 @@ const postaa = () => {
         'Authorization': auth,
         'host': 'rekognition.us-east-1.amazonaws.com',
         'Content-Type': 'application/x-amz-json-1.1',
-        'x-amz-date': '20200805T123600Z',
+        'x-amz-date': amzdate,
         'x-amz-target': 'RekognitionService.DetectLabels'
     }
 
 
-    // const body = {
-        
-    // }
+    const image = getUrlAsBase64("https://watson-developer-cloud.github.io/doc-tutorial-downloads/visual-recognition/fruitbowl.jpg")
 
-    // console.log("bodymme", body)
 
-    // const URL = ''
+    const body = {
+        "Image": {
+            "Bytes": image
+        },
+        "MinConfidence": 0.0
+    }
 
-    // return axios.post(URL, body, { headers } )
-    //                 .then(resp => {
+    console.log("bodymme", body)
 
-    //                     console.log('responsemme',resp)
+    const URL = 'https://rekognition.us-east-1.amazonaws.com'
 
-    //                     return true
-    //                 })
-    //                 .catch(err => {
+    return axios.post(URL, body, { headers } )
+                    .then(resp => {
+
+                        console.log('responsemme',resp)
+
+                        return true
+                    })
+                    .catch(err => {
                         
-    //                     console.log('Error tagging images:',err)
-    //                 })
+                        console.log('Error tagging images:',err)
+                    })
 }
 
 
