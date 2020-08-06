@@ -4,28 +4,37 @@ const jwt = require('jsonwebtoken')
 const querystring = require('querystring')
 
 
+
 const postaa = () => {
 
     // directly send a signed JWT to vision api: https://developers.google.com/identity/protocols/oauth2/service-account#jwt-auth
     // (substitute privateKey, kid, iss and sub with actual credentials)
 
-
     const privateKey = fs.readFileSync('privakey.txt')
-    console.log('avaimemme', privateKey)
+    
+    const mail = "" // "client_email" from servicecredidentials
+    
+    const iat = Math.floor(Date.now() / 1000)
+    const exp = iat + 3600
 
-    const token = jwt.sign({
-        header: {
-            alg: "RS256",
-            typ: "JWT",
-            kid: "private_key_id"
-        },
-        iss: "client_email",
-        sub: "client_email",
-        aud: "https://vision.googleapis.com/",
-        iat: Math.floor(Date.now() / 1000),
-        exp: Math.floor(Date.now() / 1000) + (60 * 60) // expires in 1h
-    }, privateKey)
+    const payload = {
+        iss: mail,
+        sub: mail,
+        aud: 'https://vision.googleapis.com/', 
+        iat: iat,
+        exp: exp
+        
+    }
 
+  
+    const token = jwt.sign(
+        payload
+        ,privateKey
+        , { algorithm: 'RS256'}
+    )
+
+
+    
 
     const body = {
         requests: [
@@ -46,28 +55,31 @@ const postaa = () => {
         ]
     }
 
-    console.log("bodymme", body)
-    
+  
     const header =  {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
     }
 
-    const URL = 'https://vision.googleapis.com/v1/images:annotate'
-
-    return axios.post(URL, body, { header } )
+  
+    
+    let URL = 'https://vision.googleapis.com/v1/images:annotate'
+   
+    return axios.post(URL, body, { headers: header }  )
                     .then(resp => {
 
-                        console.log('responsemme',resp)
+                        console.log('responsemme',resp.data.responses ? resp.data.responses[0].labelAnnotations : resp)
+                        console.log('status',resp.status ? resp.status : status)
 
                         return true
                     })
                     .catch(err => {
                         
                         console.log('Error tagging images:',err)
+                        console.log('status',err.response.status)
                     })
+        
 }
 
 
 postaa()
-
